@@ -5,7 +5,7 @@
 ### `sphinxharm_spectral.maxpat` — RECOMMENDED (new)
 Spectral pitch shift via pfft~/gizmo~. Cleaner artifacts, better on large intervals.
 True spectral formant warping via FFTease `fftz.mindwarp~`.
-Autocorrelation pitch detection via gen~ (replaces sigmund~).
+Pitch detection via built-in `retune~` (replaces sigmund~).
 **Requires**: FFTease package (install from Max Package Manager).
 
 ### `sphinxharm.maxpat` — Original (gen~ granular)
@@ -16,7 +16,7 @@ Keep for comparison — try both on your voice.
 - `sphinxharm_spectral.maxpat` — Main spectral patch (open this)
 - `spectral_voice_fft.maxpat` — pfft~ sub-patch (auto-loaded by pfft~)
 - `formant_eq.gendsp` — gen~ formant tilt EQ (fallback if FFTease not installed)
-- `pitch_detect.gendsp` — gen~ autocorrelation pitch detector (for key-following)
+- `pitch_detect.gendsp` — gen~ autocorrelation pitch detector (fallback, not used by default)
 - `harmony_engine.js` — Key/scale semitone calculator
 - `preset_handler.js` — Preset system (Woods/Choir/Shimmer/Dark)
 - `sphinxharm.maxpat` — Original gen~ version (for comparison)
@@ -114,10 +114,9 @@ without any external packages.
 
 ## Key-Following (Harmony Engine)
 
-When **Key Follow** is ON, the harmony engine uses a gen~ autocorrelation pitch
-detector (`pitch_detect.gendsp`) to detect your sung pitch and automatically
-adjusts each voice's semitone shift so harmonies stay in the selected key and
-scale.
+When **Key Follow** is ON, the harmony engine uses `retune~` (built into Max 9)
+to detect your sung pitch and automatically adjusts each voice's semitone shift
+so harmonies stay in the selected key and scale.
 
 ### How it works
 1. Set key (C, D, etc.) and scale (Major, Minor, Dorian, etc.)
@@ -136,11 +135,9 @@ presets). This gives you a constant interval regardless of what you sing —
 useful for parallel harmony effects.
 
 ### Pitch detection
-Uses `gen~ @gen pitch_detect` — autocorrelation-based pitch detector with RMS
-noise gate. Detects fundamental frequency of monophonic voice input. Output
-converted to MIDI note via `snapshot~ 50` → `ftom`.
-
-Range: C2 (65Hz) to Ab5 (831Hz). Threshold parameter controls noise gate.
+Uses `retune~` (built into Max 9) — professional voice pitch tracker with
+YIN-style algorithm. Outlet 1 outputs detected MIDI note number directly.
+Handles vibrato and fast passages cleanly, low latency.
 
 ## Latency Notes
 

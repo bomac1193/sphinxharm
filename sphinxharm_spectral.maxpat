@@ -2253,54 +2253,19 @@
             },
             {
                 "box": {
-                    "id": "obj-sigmund",
-                    "maxclass": "newobj",
-                    "numinlets": 1,
-                    "numoutlets": 1,
-                    "patching_rect": [
-                        850,
-                        295,
-                        140,
-                        22
-                    ],
-                    "text": "gen~ @gen pitch_detect",
-                    "outlettype": [
-                        "signal"
-                    ]
-                }
-            },
-            {
-                "box": {
-                    "id": "obj-snapshot",
+                    "id": "obj-retune",
                     "maxclass": "newobj",
                     "numinlets": 2,
-                    "numoutlets": 1,
+                    "numoutlets": 2,
                     "patching_rect": [
                         850,
-                        320,
-                        75,
+                        305,
+                        55,
                         22
                     ],
-                    "text": "snapshot~ 50",
+                    "text": "retune~",
                     "outlettype": [
-                        "float"
-                    ]
-                }
-            },
-            {
-                "box": {
-                    "id": "obj-ftom",
-                    "maxclass": "newobj",
-                    "numinlets": 1,
-                    "numoutlets": 1,
-                    "patching_rect": [
-                        850,
-                        345,
-                        35,
-                        22
-                    ],
-                    "text": "ftom",
-                    "outlettype": [
+                        "signal",
                         ""
                     ]
                 }
@@ -2950,7 +2915,7 @@
                         500,
                         20
                     ],
-                    "text": "Key Follow: gen~ pitch_detect (autocorrelation) -> harmony_engine snaps to scale"
+                    "text": "Key Follow: retune~ detects pitch (MIDI note) -> harmony_engine snaps to scale"
                 }
             },
             {
@@ -2980,7 +2945,7 @@
                         400,
                         20
                     ],
-                    "text": "Requires: FFTease package (for fftz.mindwarp~). sigmund~ replaced by gen~ pitch_detect."
+                    "text": "Requires: FFTease package (for fftz.mindwarp~). Pitch detection via retune~ (built-in)."
                 }
             }
         ],
@@ -4432,7 +4397,7 @@
                         0
                     ],
                     "destination": [
-                        "obj-sigmund",
+                        "obj-retune",
                         0
                     ]
                 }
@@ -4440,32 +4405,8 @@
             {
                 "patchline": {
                     "source": [
-                        "obj-sigmund",
-                        0
-                    ],
-                    "destination": [
-                        "obj-snapshot",
-                        0
-                    ]
-                }
-            },
-            {
-                "patchline": {
-                    "source": [
-                        "obj-snapshot",
-                        0
-                    ],
-                    "destination": [
-                        "obj-ftom",
-                        0
-                    ]
-                }
-            },
-            {
-                "patchline": {
-                    "source": [
-                        "obj-ftom",
-                        0
+                        "obj-retune",
+                        1
                     ],
                     "destination": [
                         "obj-harmony",
