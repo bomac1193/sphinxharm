@@ -111,8 +111,8 @@ def make_voice(n, bx, by):
     box(f"{v}-invp", "newobj", [bx+200, by+156, 50, 22], "!-~ 1.",
         numinlets=2, numoutlets=1, outlettype=["signal"])
 
-    # Signal chain (shifted down to accommodate send~ row)
-    box(f"{v}-pfft", "newobj", [bx, by+186, 260, 22], f"pfft~ spectral_voice_fft 2048 4 {n}",
+    # Signal chain — each voice loads its OWN subpatch (no #N substitution risk)
+    box(f"{v}-pfft", "newobj", [bx, by+186, 220, 22], f"pfft~ spectral_voice_{n} 2048 4",
         numinlets=1, numoutlets=1, outlettype=["signal"])
     box(f"{v}-fmteq", "newobj", [bx, by+216, 130, 22], "fftz.mindwarp~ 2048 4",
         numinlets=2, numoutlets=1, outlettype=["signal"])

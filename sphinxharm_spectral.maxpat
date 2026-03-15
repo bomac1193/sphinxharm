@@ -454,10 +454,10 @@
                     "patching_rect": [
                         30,
                         276,
-                        260,
+                        220,
                         22
                     ],
-                    "text": "pfft~ spectral_voice_fft 2048 4 1",
+                    "text": "pfft~ spectral_voice_1 2048 4",
                     "outlettype": [
                         "signal"
                     ]
@@ -904,10 +904,10 @@
                     "patching_rect": [
                         360,
                         276,
-                        260,
+                        220,
                         22
                     ],
-                    "text": "pfft~ spectral_voice_fft 2048 4 2",
+                    "text": "pfft~ spectral_voice_2 2048 4",
                     "outlettype": [
                         "signal"
                     ]
@@ -1354,10 +1354,10 @@
                     "patching_rect": [
                         30,
                         611,
-                        260,
+                        220,
                         22
                     ],
-                    "text": "pfft~ spectral_voice_fft 2048 4 3",
+                    "text": "pfft~ spectral_voice_3 2048 4",
                     "outlettype": [
                         "signal"
                     ]
@@ -1804,10 +1804,10 @@
                     "patching_rect": [
                         360,
                         611,
-                        260,
+                        220,
                         22
                     ],
-                    "text": "pfft~ spectral_voice_fft 2048 4 4",
+                    "text": "pfft~ spectral_voice_4 2048 4",
                     "outlettype": [
                         "signal"
                     ]
