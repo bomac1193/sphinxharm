@@ -30,7 +30,7 @@
                         500,
                         20
                     ],
-                    "text": "SPHINXHARM SPECTRAL \u2014 pfft~/gizmo~ + FFTease mindwarp~ harmonizer",
+                    "text": "SPHINXHARM SPECTRAL \u2014 pfft~/gizmo~ + formant EQ harmonizer",
                     "fontsize": 13,
                     "fontface": 1
                 }
@@ -47,7 +47,7 @@
                         650,
                         20
                     ],
-                    "text": "Spectral pitch (gizmo~) + true spectral formant warping (mindwarp~). Requires FFTease package."
+                    "text": "Spectral pitch shift (gizmo~) + formant tilt EQ. No external packages required."
                 }
             },
             {
@@ -326,17 +326,17 @@
                 "box": {
                     "id": "obj-v1-fmtsig",
                     "maxclass": "newobj",
-                    "numinlets": 1,
+                    "numinlets": 2,
                     "numoutlets": 1,
                     "patching_rect": [
                         90,
                         190,
-                        128,
+                        32,
                         22
                     ],
-                    "text": "expr pow(2.\\, $f1/12.)",
+                    "text": "sig~",
                     "outlettype": [
-                        ""
+                        "signal"
                     ]
                 }
             },
@@ -421,10 +421,10 @@
                     "patching_rect": [
                         30,
                         250,
-                        110,
+                        130,
                         22
                     ],
-                    "text": "mindwarp~ 2048 4",
+                    "text": "gen~ @gen formant_eq",
                     "outlettype": [
                         "signal"
                     ]
@@ -725,17 +725,17 @@
                 "box": {
                     "id": "obj-v2-fmtsig",
                     "maxclass": "newobj",
-                    "numinlets": 1,
+                    "numinlets": 2,
                     "numoutlets": 1,
                     "patching_rect": [
                         420,
                         190,
-                        128,
+                        32,
                         22
                     ],
-                    "text": "expr pow(2.\\, $f1/12.)",
+                    "text": "sig~",
                     "outlettype": [
-                        ""
+                        "signal"
                     ]
                 }
             },
@@ -820,10 +820,10 @@
                     "patching_rect": [
                         360,
                         250,
-                        110,
+                        130,
                         22
                     ],
-                    "text": "mindwarp~ 2048 4",
+                    "text": "gen~ @gen formant_eq",
                     "outlettype": [
                         "signal"
                     ]
@@ -1124,17 +1124,17 @@
                 "box": {
                     "id": "obj-v3-fmtsig",
                     "maxclass": "newobj",
-                    "numinlets": 1,
+                    "numinlets": 2,
                     "numoutlets": 1,
                     "patching_rect": [
                         90,
                         475,
-                        128,
+                        32,
                         22
                     ],
-                    "text": "expr pow(2.\\, $f1/12.)",
+                    "text": "sig~",
                     "outlettype": [
-                        ""
+                        "signal"
                     ]
                 }
             },
@@ -1219,10 +1219,10 @@
                     "patching_rect": [
                         30,
                         535,
-                        110,
+                        130,
                         22
                     ],
-                    "text": "mindwarp~ 2048 4",
+                    "text": "gen~ @gen formant_eq",
                     "outlettype": [
                         "signal"
                     ]
@@ -1523,17 +1523,17 @@
                 "box": {
                     "id": "obj-v4-fmtsig",
                     "maxclass": "newobj",
-                    "numinlets": 1,
+                    "numinlets": 2,
                     "numoutlets": 1,
                     "patching_rect": [
                         420,
                         475,
-                        128,
+                        32,
                         22
                     ],
-                    "text": "expr pow(2.\\, $f1/12.)",
+                    "text": "sig~",
                     "outlettype": [
-                        ""
+                        "signal"
                     ]
                 }
             },
@@ -1618,10 +1618,10 @@
                     "patching_rect": [
                         360,
                         535,
-                        110,
+                        130,
                         22
                     ],
-                    "text": "mindwarp~ 2048 4",
+                    "text": "gen~ @gen formant_eq",
                     "outlettype": [
                         "signal"
                     ]
@@ -2256,16 +2256,33 @@
                     "id": "obj-sigmund",
                     "maxclass": "newobj",
                     "numinlets": 1,
-                    "numoutlets": 2,
+                    "numoutlets": 1,
                     "patching_rect": [
                         850,
-                        305,
-                        175,
+                        295,
+                        140,
                         22
                     ],
-                    "text": "sigmund~ @npitch 1 @minpower 40",
+                    "text": "gen~ @gen pitch_detect",
                     "outlettype": [
-                        "float",
+                        "signal"
+                    ]
+                }
+            },
+            {
+                "box": {
+                    "id": "obj-snapshot",
+                    "maxclass": "newobj",
+                    "numinlets": 2,
+                    "numoutlets": 1,
+                    "patching_rect": [
+                        850,
+                        320,
+                        75,
+                        22
+                    ],
+                    "text": "snapshot~ 50",
+                    "outlettype": [
                         "float"
                     ]
                 }
@@ -2278,7 +2295,7 @@
                     "numoutlets": 1,
                     "patching_rect": [
                         850,
-                        332,
+                        345,
                         35,
                         22
                     ],
@@ -2296,7 +2313,7 @@
                     "numoutlets": 1,
                     "patching_rect": [
                         690,
-                        362,
+                        372,
                         280,
                         22
                     ],
@@ -2915,10 +2932,10 @@
                     "patching_rect": [
                         690,
                         760,
-                        450,
+                        500,
                         20
                     ],
-                    "text": "adc~ -> pfft~/gizmo~ (pitch) -> mindwarp~ (formant warp) -> gain -> pan"
+                    "text": "adc~ -> pfft~/gizmo~ (pitch) -> gen~ formant_eq (tilt EQ) -> gain -> delay -> pan"
                 }
             },
             {
@@ -2930,10 +2947,10 @@
                     "patching_rect": [
                         690,
                         780,
-                        450,
+                        500,
                         20
                     ],
-                    "text": "Key Follow: sigmund~ detects pitch, harmony_engine snaps to scale"
+                    "text": "Key Follow: gen~ pitch_detect (autocorrelation) -> harmony_engine snaps to scale"
                 }
             },
             {
@@ -2960,10 +2977,10 @@
                     "patching_rect": [
                         690,
                         820,
-                        450,
+                        400,
                         20
                     ],
-                    "text": "REQUIRES: FFTease package (Max Package Manager). For fallback see formant_eq.gendsp"
+                    "text": "No external packages required. All gen~ objects are self-contained."
                 }
             }
         ],
@@ -4424,6 +4441,18 @@
                 "patchline": {
                     "source": [
                         "obj-sigmund",
+                        0
+                    ],
+                    "destination": [
+                        "obj-snapshot",
+                        0
+                    ]
+                }
+            },
+            {
+                "patchline": {
+                    "source": [
+                        "obj-snapshot",
                         0
                     ],
                     "destination": [

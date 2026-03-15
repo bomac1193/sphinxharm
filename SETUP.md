@@ -4,8 +4,8 @@
 
 ### `sphinxharm_spectral.maxpat` — RECOMMENDED (new)
 Spectral pitch shift via pfft~/gizmo~. Cleaner artifacts, better on large intervals.
-True spectral formant warping via FFTease mindwarp~.
-**Requires**: FFTease package (install from Max Package Manager).
+Formant tilt EQ via gen~ codebox. Autocorrelation pitch detection via gen~.
+**No external packages required.**
 
 ### `sphinxharm.maxpat` — Original (gen~ granular)
 Time-domain granular pitch shift. Lower latency, grittier sound.
@@ -14,7 +14,8 @@ Keep for comparison — try both on your voice.
 ## Files
 - `sphinxharm_spectral.maxpat` — Main spectral patch (open this)
 - `spectral_voice_fft.maxpat` — pfft~ sub-patch (auto-loaded by pfft~)
-- `formant_eq.gendsp` — gen~ formant tilt EQ (fallback if FFTease not installed)
+- `formant_eq.gendsp` — gen~ formant tilt EQ (per-voice formant shaping)
+- `pitch_detect.gendsp` — gen~ autocorrelation pitch detector (for key-following)
 - `harmony_engine.js` — Key/scale semitone calculator
 - `preset_handler.js` — Preset system (Woods/Choir/Shimmer/Dark)
 - `sphinxharm.maxpat` — Original gen~ version (for comparison)
@@ -22,22 +23,21 @@ Keep for comparison — try both on your voice.
 - `aurora.gendsp` — Spectral shimmer freeze (standalone effect)
 
 ## Quick Start
-1. **Install FFTease** from Max Package Manager (File → Show Package Manager → search "FFTease")
-2. Open `sphinxharm_spectral.maxpat` in Max 8+
-3. **All files must be in the same folder** (or add folder to Max search path)
-4. Turn on audio (DSP) — click the speaker icon
-5. Set semitones for each voice (+4=maj3rd, +7=5th, +12=oct)
-6. Set formant per voice (0=neutral, +bright, -dark)
-7. Adjust gain (dB), delay (ms), pan (-1..1)
+1. Open `sphinxharm_spectral.maxpat` in Max 8+
+2. **All files must be in the same folder** (or add folder to Max search path)
+3. Turn on audio (DSP) — click the speaker icon
+4. Set semitones for each voice (+4=maj3rd, +7=5th, +12=oct)
+5. Set formant per voice (0=neutral, +bright, -dark)
+6. Adjust gain (dB), delay (ms), pan (-1..1)
 
 ## Signal Flow (Spectral Version)
 
 ```
 adc~ 1 (mono mic)
-├──▶ pfft~/gizmo~ V1 (pitch) → mindwarp~ (formant) → *~ gain → delay~ → pan ──┐
-├──▶ pfft~/gizmo~ V2 (pitch) → mindwarp~ (formant) → *~ gain → delay~ → pan ──┤
-├──▶ pfft~/gizmo~ V3 (pitch) → mindwarp~ (formant) → *~ gain → delay~ → pan ──┤  stereo
-├──▶ pfft~/gizmo~ V4 (pitch) → mindwarp~ (formant) → *~ gain → delay~ → pan ──┤   sum
+├──▶ pfft~/gizmo~ V1 (pitch) → gen~ formant_eq (tilt) → *~ gain → delay~ → pan ──┐
+├──▶ pfft~/gizmo~ V2 (pitch) → gen~ formant_eq (tilt) → *~ gain → delay~ → pan ──┤
+├──▶ pfft~/gizmo~ V3 (pitch) → gen~ formant_eq (tilt) → *~ gain → delay~ → pan ──┤  stereo
+├──▶ pfft~/gizmo~ V4 (pitch) → gen~ formant_eq (tilt) → *~ gain → delay~ → pan ──┤   sum
 └──▶ *~ dry gain ─────────────────────────────────────────────────────┘
                                                                        │
                                                               *~ master gain
@@ -50,13 +50,13 @@ adc~ 1 (mono mic)
 - Change to `pfft~ spectral_voice_fft 4096 4` for better quality (~93ms latency)
 - Semitones → ratio via `pow(2, semi/12)` → gizmo~ inside pfft~
 
-### mindwarp~ (FFTease spectral formant warping)
-- Input: semitones (-24 to +24), converted to warp ratio via `pow(2, semi/12)`
-- 0 semi (ratio 1.0) = no formant change
-- +12 semi (ratio 2.0) = formant up one octave (smaller vocal tract)
-- -12 semi (ratio 0.5) = formant down one octave (larger vocal tract)
-- mindwarp~ does real spectral envelope extraction and resynthesis
-- FFT size 2048, overlap 4 (matches pfft~ settings)
+### gen~ formant_eq (tilt EQ formant shaping)
+- Input: semitones (-24 to +24) directly via sig~
+- 0 semi = no formant change
+- Positive = brighter (boost highs, cut lows)
+- Negative = darker (boost lows, cut highs)
+- One-pole crossover at 2kHz, tilt factor = clamp(semi/12, -1, 1)
+- Lighter than spectral envelope warping, but zero external dependencies
 
 ## Preset Recipes
 
@@ -90,35 +90,31 @@ adc~ 1 (mono mic)
 
 ## Formant Guide
 
-mindwarp~ warps the spectral envelope independently from pitch:
-- **-24 to -12**: Very deep, barrel-like (warp 0.25–0.5)
+The gen~ formant_eq applies a tilt EQ that brightens or darkens formants:
+- **-24 to -12**: Very deep, barrel-like
 - **-11 to -5**: Noticeably darker, warm
 - **-4 to -1**: Slightly warmer
-- **0**: No formant change (warp 1.0)
+- **0**: No formant change
 - **+1 to +4**: Slightly brighter
 - **+5 to +11**: Noticeably brighter, airy
-- **+12 to +24**: Very bright, ethereal (warp 2.0–4.0)
+- **+12 to +24**: Very bright, ethereal
 
 Key trick for natural harmonies: shift formant OPPOSITE to pitch.
 - Voice pitched UP → negative formant (keeps it grounded)
 - Voice pitched DOWN → positive formant (prevents mud)
 
-This is dramatically better than the tilt EQ approximation because mindwarp~
-extracts and resynthesizes the actual spectral envelope rather than just
-tilting brightness.
+### Upgrading to FFTease mindwarp~
 
-## Fallback (no FFTease)
-
-If FFTease is not installed, replace each `mindwarp~ 2048 4` with
-`gen~ @gen formant_eq` and each formant `expr pow(2.\, $f1/12.)` with `sig~`.
-The `formant_eq.gendsp` file provides a tilt EQ approximation that works
-without any external packages.
+For dramatically better formant quality, install **FFTease** from the Max Package
+Manager and replace each `gen~ @gen formant_eq` with `mindwarp~ 2048 4`. Also
+replace each formant `sig~` with `expr pow(2.\, $f1/12.)` since mindwarp~ expects
+a warp ratio, not raw semitones.
 
 ## Key-Following (Harmony Engine)
 
-When **Key Follow** is ON, the harmony engine uses `sigmund~` to detect your
-sung pitch and automatically adjusts each voice's semitone shift so harmonies
-stay in the selected key and scale.
+When **Key Follow** is ON, the harmony engine uses a gen~ autocorrelation pitch
+detector to detect your sung pitch and automatically adjusts each voice's
+semitone shift so harmonies stay in the selected key and scale.
 
 ### How it works
 1. Set key (C, D, etc.) and scale (Major, Minor, Dorian, etc.)
@@ -137,8 +133,11 @@ presets). This gives you a constant interval regardless of what you sing —
 useful for parallel harmony effects.
 
 ### Pitch detection
-Uses `sigmund~` with `@minpower 40` — only responds when you're singing above
-the noise floor. Converted to MIDI note via `ftom`.
+Uses `gen~ @gen pitch_detect` — autocorrelation-based pitch detector with RMS
+noise gate. Detects fundamental frequency of monophonic voice input. Output
+converted to MIDI note via `snapshot~ 50` → `ftom`.
+
+Range: C2 (65Hz) to Ab5 (831Hz). Threshold parameter controls noise gate.
 
 ## Latency Notes
 

@@ -1,0 +1,24 @@
+{
+    "patcher": {
+        "fileversion": 1,
+        "appversion": { "major": 9, "minor": 1, "revision": 0, "architecture": "x64", "modernui": 1 },
+        "classnamespace": "dsp.gen",
+        "rect": [ 100.0, 100.0, 600.0, 450.0 ],
+        "boxes": [
+            { "box": { "id": "obj-in1", "maxclass": "newobj", "numinlets": 0, "numoutlets": 1, "outlettype": [ "" ], "patching_rect": [ 40.0, 30.0, 170.0, 22.0 ], "text": "in 1 @comment \"audio\"" } },
+            {
+                "box": {
+                    "id": "obj-code", "maxclass": "newobj", "numinlets": 1, "numoutlets": 1, "outlettype": [ "" ],
+                    "patching_rect": [ 40.0, 70.0, 500.0, 350.0 ], "text": "codebox",
+                    "code": "// Autocorrelation pitch detector for monophonic voice\n// Outputs detected frequency in Hz (0 when silent)\n// Use ftom after this to convert to MIDI note number\n//\n// Replaces sigmund~ with zero external dependencies.\n// Coarse search at 12 lag points, then fine refinement.\n\nData buf(2048);\nData lag_table(12);\n\nHistory idx(0);\nHistory hop(0);\nHistory freq(0);\nHistory init_done(0);\n\nParam threshold(0.02, min=0.001, max=0.2);\n\n// Initialize lag lookup table (once)\nif (init_done == 0) {\n    // Lags for MIDI 36,40,44,...,80 at 44100 Hz\n    // Covers C2 (65Hz) to Ab5 (831Hz)\n    lag_table.poke(674, 0);\n    lag_table.poke(535, 1);\n    lag_table.poke(425, 2);\n    lag_table.poke(337, 3);\n    lag_table.poke(268, 4);\n    lag_table.poke(212, 5);\n    lag_table.poke(169, 6);\n    lag_table.poke(134, 7);\n    lag_table.poke(106, 8);\n    lag_table.poke(84, 9);\n    lag_table.poke(67, 10);\n    lag_table.poke(53, 11);\n    init_done = 1;\n}\n\n// Write to circular buffer\nbuf.poke(in1, idx);\nidx = wrap(idx + 1, 0, 2048);\n\nhop += 1;\nif (hop >= 2048) {\n    hop = 0;\n\n    // RMS noise gate (subsample for speed)\n    rms = 0;\n    for (i = 0; i < 512; i += 1) {\n        s = buf.peek(i * 4);\n        rms += s * s;\n    }\n    rms = sqrt(rms / 512);\n\n    if (rms > threshold) {\n        // Coarse: autocorrelation at 12 candidate lags\n        best_lag = 0;\n        best_val = -1;\n        for (c = 0; c < 12; c += 1) {\n            lag = lag_table.peek(c);\n            sum = 0;\n            for (i = 0; i < 512; i += 1) {\n                a = buf.peek(wrap(idx + i, 0, 2048));\n                b = buf.peek(wrap(idx + i + lag, 0, 2048));\n                sum += a * b;\n            }\n            if (sum > best_val) {\n                best_val = sum;\n                best_lag = lag;\n            }\n        }\n\n        // Fine: refine +/- 6 samples around best lag\n        for (offset = -6; offset <= 6; offset += 1) {\n            lag = best_lag + offset;\n            if (lag > 40) {\n                sum = 0;\n                for (i = 0; i < 512; i += 1) {\n                    a = buf.peek(wrap(idx + i, 0, 2048));\n                    b = buf.peek(wrap(idx + i + lag, 0, 2048));\n                    sum += a * b;\n                }\n                if (sum > best_val) {\n                    best_val = sum;\n                    best_lag = lag;\n                }\n            }\n        }\n\n        if (best_lag > 0) {\n            freq = samplerate / best_lag;\n        }\n    } else {\n        freq = 0;\n    }\n}\n\nout1 = freq;\n"
+                }
+            },
+            { "box": { "id": "obj-out1", "maxclass": "newobj", "numinlets": 1, "numoutlets": 0, "patching_rect": [ 40.0, 450.0, 220.0, 22.0 ], "text": "out 1 @comment \"frequency (Hz)\"" } }
+        ],
+        "lines": [
+            { "patchline": { "source": [ "obj-in1", 0 ], "destination": [ "obj-code", 0 ] } },
+            { "patchline": { "source": [ "obj-code", 0 ], "destination": [ "obj-out1", 0 ] } }
+        ],
+        "autosave": 0
+    }
+}
