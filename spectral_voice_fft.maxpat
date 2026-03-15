@@ -9,7 +9,7 @@
 
             { "box": { "id": "obj-fftin", "maxclass": "newobj", "numinlets": 1, "numoutlets": 3, "outlettype": [ "signal", "signal", "signal" ], "patching_rect": [ 40.0, 60.0, 80.0, 22.0 ], "text": "fftin~ 1" } },
 
-            { "box": { "id": "obj-ratio", "maxclass": "newobj", "numinlets": 1, "numoutlets": 1, "outlettype": [ "signal" ], "patching_rect": [ 200.0, 60.0, 95.0, 22.0 ], "text": "pftin~ 2" } },
+            { "box": { "id": "obj-ratio", "maxclass": "newobj", "numinlets": 1, "numoutlets": 1, "outlettype": [ "signal" ], "patching_rect": [ 200.0, 60.0, 95.0, 22.0 ], "text": "in~ 2" } },
 
             { "box": { "id": "obj-gizmo", "maxclass": "newobj", "numinlets": 2, "numoutlets": 2, "outlettype": [ "signal", "signal" ], "patching_rect": [ 40.0, 140.0, 80.0, 22.0 ], "text": "gizmo~" } },
 
