@@ -4,7 +4,8 @@
 
 ### `sphinxharm_spectral.maxpat` — RECOMMENDED (new)
 Spectral pitch shift via pfft~/gizmo~. Cleaner artifacts, better on large intervals.
-Formant shaping via tilt EQ (gen~ formant_eq).
+True spectral formant warping via FFTease mindwarp~.
+**Requires**: FFTease package (install from Max Package Manager).
 
 ### `sphinxharm.maxpat` — Original (gen~ granular)
 Time-domain granular pitch shift. Lower latency, grittier sound.
@@ -13,7 +14,7 @@ Keep for comparison — try both on your voice.
 ## Files
 - `sphinxharm_spectral.maxpat` — Main spectral patch (open this)
 - `spectral_voice_fft.maxpat` — pfft~ sub-patch (auto-loaded by pfft~)
-- `formant_eq.gendsp` — gen~ formant tilt EQ (auto-loaded)
+- `formant_eq.gendsp` — gen~ formant tilt EQ (fallback if FFTease not installed)
 - `harmony_engine.js` — Key/scale semitone calculator
 - `preset_handler.js` — Preset system (Woods/Choir/Shimmer/Dark)
 - `sphinxharm.maxpat` — Original gen~ version (for comparison)
@@ -21,21 +22,22 @@ Keep for comparison — try both on your voice.
 - `aurora.gendsp` — Spectral shimmer freeze (standalone effect)
 
 ## Quick Start
-1. Open `sphinxharm_spectral.maxpat` in Max 8+
-2. **All files must be in the same folder** (or add folder to Max search path)
-3. Turn on audio (DSP) — click the speaker icon
-4. Set semitones for each voice (+4=maj3rd, +7=5th, +12=oct)
-5. Set formant per voice (0=neutral, +bright, -dark)
-6. Adjust gain (dB), delay (ms), pan (-1..1)
+1. **Install FFTease** from Max Package Manager (File → Show Package Manager → search "FFTease")
+2. Open `sphinxharm_spectral.maxpat` in Max 8+
+3. **All files must be in the same folder** (or add folder to Max search path)
+4. Turn on audio (DSP) — click the speaker icon
+5. Set semitones for each voice (+4=maj3rd, +7=5th, +12=oct)
+6. Set formant per voice (0=neutral, +bright, -dark)
+7. Adjust gain (dB), delay (ms), pan (-1..1)
 
 ## Signal Flow (Spectral Version)
 
 ```
 adc~ 1 (mono mic)
-├──▶ pfft~/gizmo~ V1 (pitch) → formant_eq → *~ gain → delay~ → pan ──┐
-├──▶ pfft~/gizmo~ V2 (pitch) → formant_eq → *~ gain → delay~ → pan ──┤
-├──▶ pfft~/gizmo~ V3 (pitch) → formant_eq → *~ gain → delay~ → pan ──┤  stereo
-├──▶ pfft~/gizmo~ V4 (pitch) → formant_eq → *~ gain → delay~ → pan ──┤   sum
+├──▶ pfft~/gizmo~ V1 (pitch) → mindwarp~ (formant) → *~ gain → delay~ → pan ──┐
+├──▶ pfft~/gizmo~ V2 (pitch) → mindwarp~ (formant) → *~ gain → delay~ → pan ──┤
+├──▶ pfft~/gizmo~ V3 (pitch) → mindwarp~ (formant) → *~ gain → delay~ → pan ──┤  stereo
+├──▶ pfft~/gizmo~ V4 (pitch) → mindwarp~ (formant) → *~ gain → delay~ → pan ──┤   sum
 └──▶ *~ dry gain ─────────────────────────────────────────────────────┘
                                                                        │
                                                               *~ master gain
@@ -48,12 +50,13 @@ adc~ 1 (mono mic)
 - Change to `pfft~ spectral_voice_fft 4096 4` for better quality (~93ms latency)
 - Semitones → ratio via `pow(2, semi/12)` → gizmo~ inside pfft~
 
-### formant_eq (tilt EQ)
-- Input: semitones (-24 to +24)
-- 0 = transparent (no coloring)
-- Positive = brighter (smaller vocal tract character)
-- Negative = darker (larger vocal tract character)
-- Crossover at 2000Hz, one-pole split
+### mindwarp~ (FFTease spectral formant warping)
+- Input: semitones (-24 to +24), converted to warp ratio via `pow(2, semi/12)`
+- 0 semi (ratio 1.0) = no formant change
+- +12 semi (ratio 2.0) = formant up one octave (smaller vocal tract)
+- -12 semi (ratio 0.5) = formant down one octave (larger vocal tract)
+- mindwarp~ does real spectral envelope extraction and resynthesis
+- FFT size 2048, overlap 4 (matches pfft~ settings)
 
 ## Preset Recipes
 
@@ -87,32 +90,29 @@ adc~ 1 (mono mic)
 
 ## Formant Guide
 
-The tilt EQ shapes spectral brightness/darkness:
-- **-24 to -12**: Very deep, barrel-like
+mindwarp~ warps the spectral envelope independently from pitch:
+- **-24 to -12**: Very deep, barrel-like (warp 0.25–0.5)
 - **-11 to -5**: Noticeably darker, warm
 - **-4 to -1**: Slightly warmer
-- **0**: Transparent (no coloring)
+- **0**: No formant change (warp 1.0)
 - **+1 to +4**: Slightly brighter
 - **+5 to +11**: Noticeably brighter, airy
-- **+12 to +24**: Very bright, ethereal/chipmunk
+- **+12 to +24**: Very bright, ethereal (warp 2.0–4.0)
 
 Key trick for natural harmonies: shift formant OPPOSITE to pitch.
 - Voice pitched UP → negative formant (keeps it grounded)
 - Voice pitched DOWN → positive formant (prevents mud)
 
-## FFTease Upgrade (Optional)
+This is dramatically better than the tilt EQ approximation because mindwarp~
+extracts and resynthesizes the actual spectral envelope rather than just
+tilting brightness.
 
-For **true spectral formant shifting** instead of the tilt EQ approximation:
+## Fallback (no FFTease)
 
-1. Install FFTease from Max Package Manager
-2. After each pfft~ object, replace `gen~ @gen formant_eq` with `mindwarp~`
-3. mindwarp~ warp factor: `pow(2, formant_semitones / 12)`
-   - 1.0 = no change
-   - 2.0 = formant up one octave
-   - 0.5 = formant down one octave
-
-mindwarp~ does real spectral envelope warping — dramatically better for
-extreme formant shifts and voice-like sounds.
+If FFTease is not installed, replace each `mindwarp~ 2048 4` with
+`gen~ @gen formant_eq` and each formant `expr pow(2.\, $f1/12.)` with `sig~`.
+The `formant_eq.gendsp` file provides a tilt EQ approximation that works
+without any external packages.
 
 ## Key/Scale (Harmony Engine)
 

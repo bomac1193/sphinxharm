@@ -7,8 +7,8 @@
         "bglocked": 0,
         "openinpresentation": 0,
         "boxes": [
-            { "box": { "id": "obj-title", "maxclass": "comment", "numinlets": 1, "numoutlets": 0, "patching_rect": [ 30.0, 10.0, 500.0, 20.0 ], "text": "SPHINXHARM SPECTRAL — pfft~/gizmo~ 4-voice harmonizer with formant EQ", "fontsize": 13, "fontface": 1 } },
-            { "box": { "id": "obj-subtitle", "maxclass": "comment", "numinlets": 1, "numoutlets": 0, "patching_rect": [ 30.0, 30.0, 600.0, 20.0 ], "text": "Upgrade: spectral pitch shift (gizmo~) replaces gen~ granular. Tilt EQ for formant shaping." } },
+            { "box": { "id": "obj-title", "maxclass": "comment", "numinlets": 1, "numoutlets": 0, "patching_rect": [ 30.0, 10.0, 500.0, 20.0 ], "text": "SPHINXHARM SPECTRAL — pfft~/gizmo~ + FFTease mindwarp~ harmonizer", "fontsize": 13, "fontface": 1 } },
+            { "box": { "id": "obj-subtitle", "maxclass": "comment", "numinlets": 1, "numoutlets": 0, "patching_rect": [ 30.0, 30.0, 650.0, 20.0 ], "text": "Spectral pitch (gizmo~) + true spectral formant warping (mindwarp~). Requires FFTease package." } },
 
             { "box": { "id": "obj-adc", "maxclass": "newobj", "numinlets": 1, "numoutlets": 1, "outlettype": [ "signal" ], "patching_rect": [ 50.0, 60.0, 45.0, 22.0 ], "text": "adc~ 1" } },
             { "box": { "id": "obj-in-meter", "maxclass": "meter~", "numinlets": 1, "numoutlets": 1, "outlettype": [ "float" ], "patching_rect": [ 110.0, 62.0, 100.0, 14.0 ] } },
@@ -26,11 +26,11 @@
             { "box": { "id": "obj-v1-pan", "maxclass": "flonum", "numinlets": 1, "numoutlets": 2, "outlettype": [ "", "bang" ], "patching_rect": [ 250.0, 130.0, 50.0, 22.0 ], "minimum": -1.0, "maximum": 1.0 } },
 
             { "box": { "id": "obj-v1-ratio", "maxclass": "newobj", "numinlets": 1, "numoutlets": 1, "outlettype": [ "" ], "patching_rect": [ 30.0, 160.0, 128.0, 22.0 ], "text": "expr pow(2.\\, $f1/12.)" } },
-            { "box": { "id": "obj-v1-fmtsig", "maxclass": "newobj", "numinlets": 2, "numoutlets": 1, "outlettype": [ "signal" ], "patching_rect": [ 85.0, 160.0, 32.0, 22.0 ], "text": "sig~" } },
+            { "box": { "id": "obj-v1-fmtsig", "maxclass": "newobj", "numinlets": 1, "numoutlets": 1, "outlettype": [ "" ], "patching_rect": [ 85.0, 160.0, 128.0, 22.0 ], "text": "expr pow(2.\\, $f1/12.)" } },
 
             { "box": { "id": "obj-v1-pfft", "maxclass": "newobj", "numinlets": 2, "numoutlets": 1, "outlettype": [ "signal" ], "patching_rect": [ 30.0, 195.0, 230.0, 22.0 ], "text": "pfft~ spectral_voice_fft 2048 4" } },
 
-            { "box": { "id": "obj-v1-fmteq", "maxclass": "newobj", "numinlets": 2, "numoutlets": 1, "outlettype": [ "signal" ], "patching_rect": [ 30.0, 225.0, 130.0, 22.0 ], "text": "gen~ @gen formant_eq" } },
+            { "box": { "id": "obj-v1-fmteq", "maxclass": "newobj", "numinlets": 2, "numoutlets": 1, "outlettype": [ "signal" ], "patching_rect": [ 30.0, 225.0, 110.0, 22.0 ], "text": "mindwarp~ 2048 4" } },
 
             { "box": { "id": "obj-v1-dbtoa", "maxclass": "newobj", "numinlets": 1, "numoutlets": 1, "outlettype": [ "" ], "patching_rect": [ 140.0, 160.0, 38.0, 22.0 ], "text": "dbtoa" } },
             { "box": { "id": "obj-v1-mult", "maxclass": "newobj", "numinlets": 2, "numoutlets": 1, "outlettype": [ "signal" ], "patching_rect": [ 30.0, 255.0, 40.0, 22.0 ], "text": "*~ 1." } },
@@ -55,9 +55,9 @@
             { "box": { "id": "obj-v2-pan", "maxclass": "flonum", "numinlets": 1, "numoutlets": 2, "outlettype": [ "", "bang" ], "patching_rect": [ 570.0, 130.0, 50.0, 22.0 ], "minimum": -1.0, "maximum": 1.0 } },
 
             { "box": { "id": "obj-v2-ratio", "maxclass": "newobj", "numinlets": 1, "numoutlets": 1, "outlettype": [ "" ], "patching_rect": [ 350.0, 160.0, 128.0, 22.0 ], "text": "expr pow(2.\\, $f1/12.)" } },
-            { "box": { "id": "obj-v2-fmtsig", "maxclass": "newobj", "numinlets": 2, "numoutlets": 1, "outlettype": [ "signal" ], "patching_rect": [ 405.0, 160.0, 32.0, 22.0 ], "text": "sig~" } },
+            { "box": { "id": "obj-v2-fmtsig", "maxclass": "newobj", "numinlets": 1, "numoutlets": 1, "outlettype": [ "" ], "patching_rect": [ 405.0, 160.0, 128.0, 22.0 ], "text": "expr pow(2.\\, $f1/12.)" } },
             { "box": { "id": "obj-v2-pfft", "maxclass": "newobj", "numinlets": 2, "numoutlets": 1, "outlettype": [ "signal" ], "patching_rect": [ 350.0, 195.0, 230.0, 22.0 ], "text": "pfft~ spectral_voice_fft 2048 4" } },
-            { "box": { "id": "obj-v2-fmteq", "maxclass": "newobj", "numinlets": 2, "numoutlets": 1, "outlettype": [ "signal" ], "patching_rect": [ 350.0, 225.0, 130.0, 22.0 ], "text": "gen~ @gen formant_eq" } },
+            { "box": { "id": "obj-v2-fmteq", "maxclass": "newobj", "numinlets": 2, "numoutlets": 1, "outlettype": [ "signal" ], "patching_rect": [ 350.0, 225.0, 110.0, 22.0 ], "text": "mindwarp~ 2048 4" } },
             { "box": { "id": "obj-v2-dbtoa", "maxclass": "newobj", "numinlets": 1, "numoutlets": 1, "outlettype": [ "" ], "patching_rect": [ 460.0, 160.0, 38.0, 22.0 ], "text": "dbtoa" } },
             { "box": { "id": "obj-v2-mult", "maxclass": "newobj", "numinlets": 2, "numoutlets": 1, "outlettype": [ "signal" ], "patching_rect": [ 350.0, 255.0, 40.0, 22.0 ], "text": "*~ 1." } },
             { "box": { "id": "obj-v2-dlysig", "maxclass": "newobj", "numinlets": 2, "numoutlets": 1, "outlettype": [ "signal" ], "patching_rect": [ 515.0, 160.0, 32.0, 22.0 ], "text": "sig~" } },
@@ -79,9 +79,9 @@
             { "box": { "id": "obj-v3-pan", "maxclass": "flonum", "numinlets": 1, "numoutlets": 2, "outlettype": [ "", "bang" ], "patching_rect": [ 250.0, 385.0, 50.0, 22.0 ], "minimum": -1.0, "maximum": 1.0 } },
 
             { "box": { "id": "obj-v3-ratio", "maxclass": "newobj", "numinlets": 1, "numoutlets": 1, "outlettype": [ "" ], "patching_rect": [ 30.0, 415.0, 128.0, 22.0 ], "text": "expr pow(2.\\, $f1/12.)" } },
-            { "box": { "id": "obj-v3-fmtsig", "maxclass": "newobj", "numinlets": 2, "numoutlets": 1, "outlettype": [ "signal" ], "patching_rect": [ 85.0, 415.0, 32.0, 22.0 ], "text": "sig~" } },
+            { "box": { "id": "obj-v3-fmtsig", "maxclass": "newobj", "numinlets": 1, "numoutlets": 1, "outlettype": [ "" ], "patching_rect": [ 85.0, 415.0, 128.0, 22.0 ], "text": "expr pow(2.\\, $f1/12.)" } },
             { "box": { "id": "obj-v3-pfft", "maxclass": "newobj", "numinlets": 2, "numoutlets": 1, "outlettype": [ "signal" ], "patching_rect": [ 30.0, 450.0, 230.0, 22.0 ], "text": "pfft~ spectral_voice_fft 2048 4" } },
-            { "box": { "id": "obj-v3-fmteq", "maxclass": "newobj", "numinlets": 2, "numoutlets": 1, "outlettype": [ "signal" ], "patching_rect": [ 30.0, 480.0, 130.0, 22.0 ], "text": "gen~ @gen formant_eq" } },
+            { "box": { "id": "obj-v3-fmteq", "maxclass": "newobj", "numinlets": 2, "numoutlets": 1, "outlettype": [ "signal" ], "patching_rect": [ 30.0, 480.0, 110.0, 22.0 ], "text": "mindwarp~ 2048 4" } },
             { "box": { "id": "obj-v3-dbtoa", "maxclass": "newobj", "numinlets": 1, "numoutlets": 1, "outlettype": [ "" ], "patching_rect": [ 140.0, 415.0, 38.0, 22.0 ], "text": "dbtoa" } },
             { "box": { "id": "obj-v3-mult", "maxclass": "newobj", "numinlets": 2, "numoutlets": 1, "outlettype": [ "signal" ], "patching_rect": [ 30.0, 510.0, 40.0, 22.0 ], "text": "*~ 1." } },
             { "box": { "id": "obj-v3-dlysig", "maxclass": "newobj", "numinlets": 2, "numoutlets": 1, "outlettype": [ "signal" ], "patching_rect": [ 195.0, 415.0, 32.0, 22.0 ], "text": "sig~" } },
@@ -103,9 +103,9 @@
             { "box": { "id": "obj-v4-pan", "maxclass": "flonum", "numinlets": 1, "numoutlets": 2, "outlettype": [ "", "bang" ], "patching_rect": [ 570.0, 385.0, 50.0, 22.0 ], "minimum": -1.0, "maximum": 1.0 } },
 
             { "box": { "id": "obj-v4-ratio", "maxclass": "newobj", "numinlets": 1, "numoutlets": 1, "outlettype": [ "" ], "patching_rect": [ 350.0, 415.0, 128.0, 22.0 ], "text": "expr pow(2.\\, $f1/12.)" } },
-            { "box": { "id": "obj-v4-fmtsig", "maxclass": "newobj", "numinlets": 2, "numoutlets": 1, "outlettype": [ "signal" ], "patching_rect": [ 405.0, 415.0, 32.0, 22.0 ], "text": "sig~" } },
+            { "box": { "id": "obj-v4-fmtsig", "maxclass": "newobj", "numinlets": 1, "numoutlets": 1, "outlettype": [ "" ], "patching_rect": [ 405.0, 415.0, 128.0, 22.0 ], "text": "expr pow(2.\\, $f1/12.)" } },
             { "box": { "id": "obj-v4-pfft", "maxclass": "newobj", "numinlets": 2, "numoutlets": 1, "outlettype": [ "signal" ], "patching_rect": [ 350.0, 450.0, 230.0, 22.0 ], "text": "pfft~ spectral_voice_fft 2048 4" } },
-            { "box": { "id": "obj-v4-fmteq", "maxclass": "newobj", "numinlets": 2, "numoutlets": 1, "outlettype": [ "signal" ], "patching_rect": [ 350.0, 480.0, 130.0, 22.0 ], "text": "gen~ @gen formant_eq" } },
+            { "box": { "id": "obj-v4-fmteq", "maxclass": "newobj", "numinlets": 2, "numoutlets": 1, "outlettype": [ "signal" ], "patching_rect": [ 350.0, 480.0, 110.0, 22.0 ], "text": "mindwarp~ 2048 4" } },
             { "box": { "id": "obj-v4-dbtoa", "maxclass": "newobj", "numinlets": 1, "numoutlets": 1, "outlettype": [ "" ], "patching_rect": [ 460.0, 415.0, 38.0, 22.0 ], "text": "dbtoa" } },
             { "box": { "id": "obj-v4-mult", "maxclass": "newobj", "numinlets": 2, "numoutlets": 1, "outlettype": [ "signal" ], "patching_rect": [ 350.0, 510.0, 40.0, 22.0 ], "text": "*~ 1." } },
             { "box": { "id": "obj-v4-dlysig", "maxclass": "newobj", "numinlets": 2, "numoutlets": 1, "outlettype": [ "signal" ], "patching_rect": [ 515.0, 415.0, 32.0, 22.0 ], "text": "sig~" } },
@@ -165,10 +165,10 @@
             { "box": { "id": "obj-ezdac", "maxclass": "ezdac~", "numinlets": 2, "numoutlets": 0, "patching_rect": [ 260.0, 840.0, 45.0, 45.0 ] } },
 
             { "box": { "id": "obj-info1", "maxclass": "comment", "numinlets": 1, "numoutlets": 0, "patching_rect": [ 700.0, 560.0, 350.0, 20.0 ], "text": "SIGNAL FLOW:" } },
-            { "box": { "id": "obj-info2", "maxclass": "comment", "numinlets": 1, "numoutlets": 0, "patching_rect": [ 700.0, 580.0, 380.0, 20.0 ], "text": "adc~ -> pfft~/gizmo~ (pitch) -> formant_eq (tilt) -> gain -> pan" } },
-            { "box": { "id": "obj-info3", "maxclass": "comment", "numinlets": 1, "numoutlets": 0, "patching_rect": [ 700.0, 600.0, 380.0, 20.0 ], "text": "Formant tilt: +semi=brighter -semi=darker 0=transparent" } },
+            { "box": { "id": "obj-info2", "maxclass": "comment", "numinlets": 1, "numoutlets": 0, "patching_rect": [ 700.0, 580.0, 450.0, 20.0 ], "text": "adc~ -> pfft~/gizmo~ (pitch) -> mindwarp~ (formant warp) -> gain -> pan" } },
+            { "box": { "id": "obj-info3", "maxclass": "comment", "numinlets": 1, "numoutlets": 0, "patching_rect": [ 700.0, 600.0, 450.0, 20.0 ], "text": "Formant warp: semi -> pow(2,s/12) -> mindwarp~. 0=none, +12=up oct, -12=dn oct" } },
             { "box": { "id": "obj-info4", "maxclass": "comment", "numinlets": 1, "numoutlets": 0, "patching_rect": [ 700.0, 620.0, 380.0, 20.0 ], "text": "FFT: 2048pt overlap 4 (~46ms latency). Change to 4096 for quality." } },
-            { "box": { "id": "obj-info5", "maxclass": "comment", "numinlets": 1, "numoutlets": 0, "patching_rect": [ 700.0, 640.0, 380.0, 20.0 ], "text": "UPGRADE: Install FFTease, replace formant_eq with mindwarp~" } }
+            { "box": { "id": "obj-info5", "maxclass": "comment", "numinlets": 1, "numoutlets": 0, "patching_rect": [ 700.0, 640.0, 450.0, 20.0 ], "text": "REQUIRES: FFTease package (Max Package Manager). For fallback see formant_eq.gendsp" } }
         ],
         "lines": [
             { "patchline": { "source": [ "obj-adc", 0 ], "destination": [ "obj-in-meter", 0 ] } },
