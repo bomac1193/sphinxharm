@@ -13,7 +13,7 @@
             34.0,
             80.0,
             1400.0,
-            950.0
+            990.0
         ],
         "bglocked": 0,
         "openinpresentation": 0,
@@ -30,7 +30,7 @@
                         550,
                         20
                     ],
-                    "text": "SPHINXHARM SPECTRAL \u2014 pfft~/gizmo~ + fftz.mindwarp~ harmonizer",
+                    "text": "SPHINXHARM SPECTRAL \u2014 4-voice harmonizer with independent pitch + formant",
                     "fontsize": 13,
                     "fontface": 1
                 }
@@ -47,7 +47,7 @@
                         650,
                         20
                     ],
-                    "text": "Spectral pitch shift (gizmo~) + spectral formant warping (FFTease). Requires FFTease package."
+                    "text": "pfft~/gizmo~ (pitch) + fftz.mindwarp~ (formant). Each voice fully independent."
                 }
             },
             {
@@ -142,7 +142,7 @@
                     "numoutlets": 2,
                     "patching_rect": [
                         30,
-                        130,
+                        132,
                         50,
                         22
                     ],
@@ -162,7 +162,7 @@
                     "numoutlets": 2,
                     "patching_rect": [
                         90,
-                        130,
+                        132,
                         50,
                         22
                     ],
@@ -182,7 +182,7 @@
                     "numoutlets": 2,
                     "patching_rect": [
                         150,
-                        130,
+                        132,
                         50,
                         22
                     ],
@@ -200,7 +200,7 @@
                     "numoutlets": 2,
                     "patching_rect": [
                         210,
-                        130,
+                        132,
                         50,
                         22
                     ],
@@ -220,7 +220,7 @@
                     "numoutlets": 2,
                     "patching_rect": [
                         270,
-                        130,
+                        132,
                         50,
                         22
                     ],
@@ -240,7 +240,7 @@
                     "numoutlets": 1,
                     "patching_rect": [
                         30,
-                        160,
+                        162,
                         128,
                         22
                     ],
@@ -258,7 +258,7 @@
                     "numoutlets": 1,
                     "patching_rect": [
                         170,
-                        160,
+                        162,
                         38,
                         22
                     ],
@@ -272,11 +272,11 @@
                 "box": {
                     "id": "obj-v1-dlysig",
                     "maxclass": "newobj",
-                    "numinlets": 2,
+                    "numinlets": 1,
                     "numoutlets": 1,
                     "patching_rect": [
-                        210,
-                        160,
+                        220,
+                        162,
                         32,
                         22
                     ],
@@ -290,11 +290,29 @@
                 "box": {
                     "id": "obj-v1-ps",
                     "maxclass": "newobj",
-                    "numinlets": 2,
+                    "numinlets": 1,
                     "numoutlets": 1,
                     "patching_rect": [
                         280,
-                        160,
+                        162,
+                        32,
+                        22
+                    ],
+                    "text": "sig~",
+                    "outlettype": [
+                        "signal"
+                    ]
+                }
+            },
+            {
+                "box": {
+                    "id": "obj-v1-ratiosig",
+                    "maxclass": "newobj",
+                    "numinlets": 1,
+                    "numoutlets": 1,
+                    "patching_rect": [
+                        30,
+                        192,
                         32,
                         22
                     ],
@@ -312,7 +330,7 @@
                     "numoutlets": 1,
                     "patching_rect": [
                         90,
-                        190,
+                        192,
                         128,
                         22
                     ],
@@ -330,7 +348,7 @@
                     "numoutlets": 1,
                     "patching_rect": [
                         230,
-                        190,
+                        192,
                         45,
                         22
                     ],
@@ -347,12 +365,66 @@
                     "numinlets": 2,
                     "numoutlets": 1,
                     "patching_rect": [
-                        280,
-                        190,
+                        285,
+                        192,
                         40,
                         22
                     ],
                     "text": "*~ 0.5",
+                    "outlettype": [
+                        "signal"
+                    ]
+                }
+            },
+            {
+                "box": {
+                    "id": "obj-v1-fmtwarpsig",
+                    "maxclass": "newobj",
+                    "numinlets": 1,
+                    "numoutlets": 1,
+                    "patching_rect": [
+                        90,
+                        222,
+                        32,
+                        22
+                    ],
+                    "text": "sig~",
+                    "outlettype": [
+                        "signal"
+                    ]
+                }
+            },
+            {
+                "box": {
+                    "id": "obj-v1-poff",
+                    "maxclass": "newobj",
+                    "numinlets": 2,
+                    "numoutlets": 1,
+                    "patching_rect": [
+                        285,
+                        222,
+                        40,
+                        22
+                    ],
+                    "text": "+~ 0.5",
+                    "outlettype": [
+                        "signal"
+                    ]
+                }
+            },
+            {
+                "box": {
+                    "id": "obj-v1-invp",
+                    "maxclass": "newobj",
+                    "numinlets": 2,
+                    "numoutlets": 1,
+                    "patching_rect": [
+                        230,
+                        222,
+                        50,
+                        22
+                    ],
+                    "text": "!-~ 1.",
                     "outlettype": [
                         "signal"
                     ]
@@ -366,29 +438,11 @@
                     "numoutlets": 1,
                     "patching_rect": [
                         30,
-                        220,
+                        252,
                         230,
                         22
                     ],
                     "text": "pfft~ spectral_voice_fft 2048 4",
-                    "outlettype": [
-                        "signal"
-                    ]
-                }
-            },
-            {
-                "box": {
-                    "id": "obj-v1-poff",
-                    "maxclass": "newobj",
-                    "numinlets": 2,
-                    "numoutlets": 1,
-                    "patching_rect": [
-                        280,
-                        220,
-                        40,
-                        22
-                    ],
-                    "text": "+~ 0.5",
                     "outlettype": [
                         "signal"
                     ]
@@ -402,29 +456,11 @@
                     "numoutlets": 1,
                     "patching_rect": [
                         30,
-                        250,
+                        282,
                         130,
                         22
                     ],
                     "text": "fftz.mindwarp~ 2048 4",
-                    "outlettype": [
-                        "signal"
-                    ]
-                }
-            },
-            {
-                "box": {
-                    "id": "obj-v1-invp",
-                    "maxclass": "newobj",
-                    "numinlets": 2,
-                    "numoutlets": 1,
-                    "patching_rect": [
-                        280,
-                        250,
-                        50,
-                        22
-                    ],
-                    "text": "!-~ 1.",
                     "outlettype": [
                         "signal"
                     ]
@@ -438,7 +474,7 @@
                     "numoutlets": 1,
                     "patching_rect": [
                         30,
-                        280,
+                        312,
                         40,
                         22
                     ],
@@ -456,7 +492,7 @@
                     "numoutlets": 1,
                     "patching_rect": [
                         30,
-                        310,
+                        342,
                         75,
                         22
                     ],
@@ -474,7 +510,7 @@
                     "numoutlets": 1,
                     "patching_rect": [
                         30,
-                        340,
+                        372,
                         30,
                         22
                     ],
@@ -492,7 +528,7 @@
                     "numoutlets": 1,
                     "patching_rect": [
                         130,
-                        340,
+                        372,
                         30,
                         22
                     ],
@@ -541,7 +577,7 @@
                     "numoutlets": 2,
                     "patching_rect": [
                         360,
-                        130,
+                        132,
                         50,
                         22
                     ],
@@ -561,7 +597,7 @@
                     "numoutlets": 2,
                     "patching_rect": [
                         420,
-                        130,
+                        132,
                         50,
                         22
                     ],
@@ -581,7 +617,7 @@
                     "numoutlets": 2,
                     "patching_rect": [
                         480,
-                        130,
+                        132,
                         50,
                         22
                     ],
@@ -599,7 +635,7 @@
                     "numoutlets": 2,
                     "patching_rect": [
                         540,
-                        130,
+                        132,
                         50,
                         22
                     ],
@@ -619,7 +655,7 @@
                     "numoutlets": 2,
                     "patching_rect": [
                         600,
-                        130,
+                        132,
                         50,
                         22
                     ],
@@ -639,7 +675,7 @@
                     "numoutlets": 1,
                     "patching_rect": [
                         360,
-                        160,
+                        162,
                         128,
                         22
                     ],
@@ -657,7 +693,7 @@
                     "numoutlets": 1,
                     "patching_rect": [
                         500,
-                        160,
+                        162,
                         38,
                         22
                     ],
@@ -671,11 +707,11 @@
                 "box": {
                     "id": "obj-v2-dlysig",
                     "maxclass": "newobj",
-                    "numinlets": 2,
+                    "numinlets": 1,
                     "numoutlets": 1,
                     "patching_rect": [
-                        540,
-                        160,
+                        550,
+                        162,
                         32,
                         22
                     ],
@@ -689,11 +725,29 @@
                 "box": {
                     "id": "obj-v2-ps",
                     "maxclass": "newobj",
-                    "numinlets": 2,
+                    "numinlets": 1,
                     "numoutlets": 1,
                     "patching_rect": [
                         610,
-                        160,
+                        162,
+                        32,
+                        22
+                    ],
+                    "text": "sig~",
+                    "outlettype": [
+                        "signal"
+                    ]
+                }
+            },
+            {
+                "box": {
+                    "id": "obj-v2-ratiosig",
+                    "maxclass": "newobj",
+                    "numinlets": 1,
+                    "numoutlets": 1,
+                    "patching_rect": [
+                        360,
+                        192,
                         32,
                         22
                     ],
@@ -711,7 +765,7 @@
                     "numoutlets": 1,
                     "patching_rect": [
                         420,
-                        190,
+                        192,
                         128,
                         22
                     ],
@@ -729,7 +783,7 @@
                     "numoutlets": 1,
                     "patching_rect": [
                         560,
-                        190,
+                        192,
                         45,
                         22
                     ],
@@ -746,12 +800,66 @@
                     "numinlets": 2,
                     "numoutlets": 1,
                     "patching_rect": [
-                        610,
-                        190,
+                        615,
+                        192,
                         40,
                         22
                     ],
                     "text": "*~ 0.5",
+                    "outlettype": [
+                        "signal"
+                    ]
+                }
+            },
+            {
+                "box": {
+                    "id": "obj-v2-fmtwarpsig",
+                    "maxclass": "newobj",
+                    "numinlets": 1,
+                    "numoutlets": 1,
+                    "patching_rect": [
+                        420,
+                        222,
+                        32,
+                        22
+                    ],
+                    "text": "sig~",
+                    "outlettype": [
+                        "signal"
+                    ]
+                }
+            },
+            {
+                "box": {
+                    "id": "obj-v2-poff",
+                    "maxclass": "newobj",
+                    "numinlets": 2,
+                    "numoutlets": 1,
+                    "patching_rect": [
+                        615,
+                        222,
+                        40,
+                        22
+                    ],
+                    "text": "+~ 0.5",
+                    "outlettype": [
+                        "signal"
+                    ]
+                }
+            },
+            {
+                "box": {
+                    "id": "obj-v2-invp",
+                    "maxclass": "newobj",
+                    "numinlets": 2,
+                    "numoutlets": 1,
+                    "patching_rect": [
+                        560,
+                        222,
+                        50,
+                        22
+                    ],
+                    "text": "!-~ 1.",
                     "outlettype": [
                         "signal"
                     ]
@@ -765,29 +873,11 @@
                     "numoutlets": 1,
                     "patching_rect": [
                         360,
-                        220,
+                        252,
                         230,
                         22
                     ],
                     "text": "pfft~ spectral_voice_fft 2048 4",
-                    "outlettype": [
-                        "signal"
-                    ]
-                }
-            },
-            {
-                "box": {
-                    "id": "obj-v2-poff",
-                    "maxclass": "newobj",
-                    "numinlets": 2,
-                    "numoutlets": 1,
-                    "patching_rect": [
-                        610,
-                        220,
-                        40,
-                        22
-                    ],
-                    "text": "+~ 0.5",
                     "outlettype": [
                         "signal"
                     ]
@@ -801,29 +891,11 @@
                     "numoutlets": 1,
                     "patching_rect": [
                         360,
-                        250,
+                        282,
                         130,
                         22
                     ],
                     "text": "fftz.mindwarp~ 2048 4",
-                    "outlettype": [
-                        "signal"
-                    ]
-                }
-            },
-            {
-                "box": {
-                    "id": "obj-v2-invp",
-                    "maxclass": "newobj",
-                    "numinlets": 2,
-                    "numoutlets": 1,
-                    "patching_rect": [
-                        610,
-                        250,
-                        50,
-                        22
-                    ],
-                    "text": "!-~ 1.",
                     "outlettype": [
                         "signal"
                     ]
@@ -837,7 +909,7 @@
                     "numoutlets": 1,
                     "patching_rect": [
                         360,
-                        280,
+                        312,
                         40,
                         22
                     ],
@@ -855,7 +927,7 @@
                     "numoutlets": 1,
                     "patching_rect": [
                         360,
-                        310,
+                        342,
                         75,
                         22
                     ],
@@ -873,7 +945,7 @@
                     "numoutlets": 1,
                     "patching_rect": [
                         360,
-                        340,
+                        372,
                         30,
                         22
                     ],
@@ -891,7 +963,7 @@
                     "numoutlets": 1,
                     "patching_rect": [
                         460,
-                        340,
+                        372,
                         30,
                         22
                     ],
@@ -909,7 +981,7 @@
                     "numoutlets": 0,
                     "patching_rect": [
                         30,
-                        375,
+                        405,
                         100,
                         20
                     ],
@@ -925,7 +997,7 @@
                     "numoutlets": 0,
                     "patching_rect": [
                         30,
-                        395,
+                        425,
                         290,
                         20
                     ],
@@ -940,7 +1012,7 @@
                     "numoutlets": 2,
                     "patching_rect": [
                         30,
-                        415,
+                        447,
                         50,
                         22
                     ],
@@ -960,7 +1032,7 @@
                     "numoutlets": 2,
                     "patching_rect": [
                         90,
-                        415,
+                        447,
                         50,
                         22
                     ],
@@ -980,7 +1052,7 @@
                     "numoutlets": 2,
                     "patching_rect": [
                         150,
-                        415,
+                        447,
                         50,
                         22
                     ],
@@ -998,7 +1070,7 @@
                     "numoutlets": 2,
                     "patching_rect": [
                         210,
-                        415,
+                        447,
                         50,
                         22
                     ],
@@ -1018,7 +1090,7 @@
                     "numoutlets": 2,
                     "patching_rect": [
                         270,
-                        415,
+                        447,
                         50,
                         22
                     ],
@@ -1038,7 +1110,7 @@
                     "numoutlets": 1,
                     "patching_rect": [
                         30,
-                        445,
+                        477,
                         128,
                         22
                     ],
@@ -1056,7 +1128,7 @@
                     "numoutlets": 1,
                     "patching_rect": [
                         170,
-                        445,
+                        477,
                         38,
                         22
                     ],
@@ -1070,11 +1142,11 @@
                 "box": {
                     "id": "obj-v3-dlysig",
                     "maxclass": "newobj",
-                    "numinlets": 2,
+                    "numinlets": 1,
                     "numoutlets": 1,
                     "patching_rect": [
-                        210,
-                        445,
+                        220,
+                        477,
                         32,
                         22
                     ],
@@ -1088,11 +1160,29 @@
                 "box": {
                     "id": "obj-v3-ps",
                     "maxclass": "newobj",
-                    "numinlets": 2,
+                    "numinlets": 1,
                     "numoutlets": 1,
                     "patching_rect": [
                         280,
-                        445,
+                        477,
+                        32,
+                        22
+                    ],
+                    "text": "sig~",
+                    "outlettype": [
+                        "signal"
+                    ]
+                }
+            },
+            {
+                "box": {
+                    "id": "obj-v3-ratiosig",
+                    "maxclass": "newobj",
+                    "numinlets": 1,
+                    "numoutlets": 1,
+                    "patching_rect": [
+                        30,
+                        507,
                         32,
                         22
                     ],
@@ -1110,7 +1200,7 @@
                     "numoutlets": 1,
                     "patching_rect": [
                         90,
-                        475,
+                        507,
                         128,
                         22
                     ],
@@ -1128,7 +1218,7 @@
                     "numoutlets": 1,
                     "patching_rect": [
                         230,
-                        475,
+                        507,
                         45,
                         22
                     ],
@@ -1145,12 +1235,66 @@
                     "numinlets": 2,
                     "numoutlets": 1,
                     "patching_rect": [
-                        280,
-                        475,
+                        285,
+                        507,
                         40,
                         22
                     ],
                     "text": "*~ 0.5",
+                    "outlettype": [
+                        "signal"
+                    ]
+                }
+            },
+            {
+                "box": {
+                    "id": "obj-v3-fmtwarpsig",
+                    "maxclass": "newobj",
+                    "numinlets": 1,
+                    "numoutlets": 1,
+                    "patching_rect": [
+                        90,
+                        537,
+                        32,
+                        22
+                    ],
+                    "text": "sig~",
+                    "outlettype": [
+                        "signal"
+                    ]
+                }
+            },
+            {
+                "box": {
+                    "id": "obj-v3-poff",
+                    "maxclass": "newobj",
+                    "numinlets": 2,
+                    "numoutlets": 1,
+                    "patching_rect": [
+                        285,
+                        537,
+                        40,
+                        22
+                    ],
+                    "text": "+~ 0.5",
+                    "outlettype": [
+                        "signal"
+                    ]
+                }
+            },
+            {
+                "box": {
+                    "id": "obj-v3-invp",
+                    "maxclass": "newobj",
+                    "numinlets": 2,
+                    "numoutlets": 1,
+                    "patching_rect": [
+                        230,
+                        537,
+                        50,
+                        22
+                    ],
+                    "text": "!-~ 1.",
                     "outlettype": [
                         "signal"
                     ]
@@ -1164,29 +1308,11 @@
                     "numoutlets": 1,
                     "patching_rect": [
                         30,
-                        505,
+                        567,
                         230,
                         22
                     ],
                     "text": "pfft~ spectral_voice_fft 2048 4",
-                    "outlettype": [
-                        "signal"
-                    ]
-                }
-            },
-            {
-                "box": {
-                    "id": "obj-v3-poff",
-                    "maxclass": "newobj",
-                    "numinlets": 2,
-                    "numoutlets": 1,
-                    "patching_rect": [
-                        280,
-                        505,
-                        40,
-                        22
-                    ],
-                    "text": "+~ 0.5",
                     "outlettype": [
                         "signal"
                     ]
@@ -1200,29 +1326,11 @@
                     "numoutlets": 1,
                     "patching_rect": [
                         30,
-                        535,
+                        597,
                         130,
                         22
                     ],
                     "text": "fftz.mindwarp~ 2048 4",
-                    "outlettype": [
-                        "signal"
-                    ]
-                }
-            },
-            {
-                "box": {
-                    "id": "obj-v3-invp",
-                    "maxclass": "newobj",
-                    "numinlets": 2,
-                    "numoutlets": 1,
-                    "patching_rect": [
-                        280,
-                        535,
-                        50,
-                        22
-                    ],
-                    "text": "!-~ 1.",
                     "outlettype": [
                         "signal"
                     ]
@@ -1236,7 +1344,7 @@
                     "numoutlets": 1,
                     "patching_rect": [
                         30,
-                        565,
+                        627,
                         40,
                         22
                     ],
@@ -1254,7 +1362,7 @@
                     "numoutlets": 1,
                     "patching_rect": [
                         30,
-                        595,
+                        657,
                         75,
                         22
                     ],
@@ -1272,7 +1380,7 @@
                     "numoutlets": 1,
                     "patching_rect": [
                         30,
-                        625,
+                        687,
                         30,
                         22
                     ],
@@ -1290,7 +1398,7 @@
                     "numoutlets": 1,
                     "patching_rect": [
                         130,
-                        625,
+                        687,
                         30,
                         22
                     ],
@@ -1308,7 +1416,7 @@
                     "numoutlets": 0,
                     "patching_rect": [
                         360,
-                        375,
+                        405,
                         100,
                         20
                     ],
@@ -1324,7 +1432,7 @@
                     "numoutlets": 0,
                     "patching_rect": [
                         360,
-                        395,
+                        425,
                         290,
                         20
                     ],
@@ -1339,7 +1447,7 @@
                     "numoutlets": 2,
                     "patching_rect": [
                         360,
-                        415,
+                        447,
                         50,
                         22
                     ],
@@ -1359,7 +1467,7 @@
                     "numoutlets": 2,
                     "patching_rect": [
                         420,
-                        415,
+                        447,
                         50,
                         22
                     ],
@@ -1379,7 +1487,7 @@
                     "numoutlets": 2,
                     "patching_rect": [
                         480,
-                        415,
+                        447,
                         50,
                         22
                     ],
@@ -1397,7 +1505,7 @@
                     "numoutlets": 2,
                     "patching_rect": [
                         540,
-                        415,
+                        447,
                         50,
                         22
                     ],
@@ -1417,7 +1525,7 @@
                     "numoutlets": 2,
                     "patching_rect": [
                         600,
-                        415,
+                        447,
                         50,
                         22
                     ],
@@ -1437,7 +1545,7 @@
                     "numoutlets": 1,
                     "patching_rect": [
                         360,
-                        445,
+                        477,
                         128,
                         22
                     ],
@@ -1455,7 +1563,7 @@
                     "numoutlets": 1,
                     "patching_rect": [
                         500,
-                        445,
+                        477,
                         38,
                         22
                     ],
@@ -1469,11 +1577,11 @@
                 "box": {
                     "id": "obj-v4-dlysig",
                     "maxclass": "newobj",
-                    "numinlets": 2,
+                    "numinlets": 1,
                     "numoutlets": 1,
                     "patching_rect": [
-                        540,
-                        445,
+                        550,
+                        477,
                         32,
                         22
                     ],
@@ -1487,11 +1595,29 @@
                 "box": {
                     "id": "obj-v4-ps",
                     "maxclass": "newobj",
-                    "numinlets": 2,
+                    "numinlets": 1,
                     "numoutlets": 1,
                     "patching_rect": [
                         610,
-                        445,
+                        477,
+                        32,
+                        22
+                    ],
+                    "text": "sig~",
+                    "outlettype": [
+                        "signal"
+                    ]
+                }
+            },
+            {
+                "box": {
+                    "id": "obj-v4-ratiosig",
+                    "maxclass": "newobj",
+                    "numinlets": 1,
+                    "numoutlets": 1,
+                    "patching_rect": [
+                        360,
+                        507,
                         32,
                         22
                     ],
@@ -1509,7 +1635,7 @@
                     "numoutlets": 1,
                     "patching_rect": [
                         420,
-                        475,
+                        507,
                         128,
                         22
                     ],
@@ -1527,7 +1653,7 @@
                     "numoutlets": 1,
                     "patching_rect": [
                         560,
-                        475,
+                        507,
                         45,
                         22
                     ],
@@ -1544,12 +1670,66 @@
                     "numinlets": 2,
                     "numoutlets": 1,
                     "patching_rect": [
-                        610,
-                        475,
+                        615,
+                        507,
                         40,
                         22
                     ],
                     "text": "*~ 0.5",
+                    "outlettype": [
+                        "signal"
+                    ]
+                }
+            },
+            {
+                "box": {
+                    "id": "obj-v4-fmtwarpsig",
+                    "maxclass": "newobj",
+                    "numinlets": 1,
+                    "numoutlets": 1,
+                    "patching_rect": [
+                        420,
+                        537,
+                        32,
+                        22
+                    ],
+                    "text": "sig~",
+                    "outlettype": [
+                        "signal"
+                    ]
+                }
+            },
+            {
+                "box": {
+                    "id": "obj-v4-poff",
+                    "maxclass": "newobj",
+                    "numinlets": 2,
+                    "numoutlets": 1,
+                    "patching_rect": [
+                        615,
+                        537,
+                        40,
+                        22
+                    ],
+                    "text": "+~ 0.5",
+                    "outlettype": [
+                        "signal"
+                    ]
+                }
+            },
+            {
+                "box": {
+                    "id": "obj-v4-invp",
+                    "maxclass": "newobj",
+                    "numinlets": 2,
+                    "numoutlets": 1,
+                    "patching_rect": [
+                        560,
+                        537,
+                        50,
+                        22
+                    ],
+                    "text": "!-~ 1.",
                     "outlettype": [
                         "signal"
                     ]
@@ -1563,29 +1743,11 @@
                     "numoutlets": 1,
                     "patching_rect": [
                         360,
-                        505,
+                        567,
                         230,
                         22
                     ],
                     "text": "pfft~ spectral_voice_fft 2048 4",
-                    "outlettype": [
-                        "signal"
-                    ]
-                }
-            },
-            {
-                "box": {
-                    "id": "obj-v4-poff",
-                    "maxclass": "newobj",
-                    "numinlets": 2,
-                    "numoutlets": 1,
-                    "patching_rect": [
-                        610,
-                        505,
-                        40,
-                        22
-                    ],
-                    "text": "+~ 0.5",
                     "outlettype": [
                         "signal"
                     ]
@@ -1599,29 +1761,11 @@
                     "numoutlets": 1,
                     "patching_rect": [
                         360,
-                        535,
+                        597,
                         130,
                         22
                     ],
                     "text": "fftz.mindwarp~ 2048 4",
-                    "outlettype": [
-                        "signal"
-                    ]
-                }
-            },
-            {
-                "box": {
-                    "id": "obj-v4-invp",
-                    "maxclass": "newobj",
-                    "numinlets": 2,
-                    "numoutlets": 1,
-                    "patching_rect": [
-                        610,
-                        535,
-                        50,
-                        22
-                    ],
-                    "text": "!-~ 1.",
                     "outlettype": [
                         "signal"
                     ]
@@ -1635,7 +1779,7 @@
                     "numoutlets": 1,
                     "patching_rect": [
                         360,
-                        565,
+                        627,
                         40,
                         22
                     ],
@@ -1653,7 +1797,7 @@
                     "numoutlets": 1,
                     "patching_rect": [
                         360,
-                        595,
+                        657,
                         75,
                         22
                     ],
@@ -1671,7 +1815,7 @@
                     "numoutlets": 1,
                     "patching_rect": [
                         360,
-                        625,
+                        687,
                         30,
                         22
                     ],
@@ -1689,7 +1833,7 @@
                     "numoutlets": 1,
                     "patching_rect": [
                         460,
-                        625,
+                        687,
                         30,
                         22
                     ],
@@ -2260,7 +2404,7 @@
                     "numoutlets": 1,
                     "patching_rect": [
                         690,
-                        372,
+                        345,
                         280,
                         22
                     ],
@@ -2278,7 +2422,7 @@
                     "numoutlets": 0,
                     "patching_rect": [
                         690,
-                        400,
+                        380,
                         160,
                         20
                     ],
@@ -2294,7 +2438,7 @@
                     "numoutlets": 1,
                     "patching_rect": [
                         690,
-                        425,
+                        403,
                         50,
                         22
                     ],
@@ -2312,7 +2456,7 @@
                     "numoutlets": 1,
                     "patching_rect": [
                         745,
-                        425,
+                        403,
                         50,
                         22
                     ],
@@ -2330,7 +2474,7 @@
                     "numoutlets": 1,
                     "patching_rect": [
                         800,
-                        425,
+                        403,
                         55,
                         22
                     ],
@@ -2348,7 +2492,7 @@
                     "numoutlets": 1,
                     "patching_rect": [
                         860,
-                        425,
+                        403,
                         50,
                         22
                     ],
@@ -2366,7 +2510,7 @@
                     "numoutlets": 0,
                     "patching_rect": [
                         690,
-                        448,
+                        426,
                         50,
                         20
                     ],
@@ -2381,7 +2525,7 @@
                     "numoutlets": 0,
                     "patching_rect": [
                         745,
-                        448,
+                        426,
                         50,
                         20
                     ],
@@ -2396,7 +2540,7 @@
                     "numoutlets": 0,
                     "patching_rect": [
                         800,
-                        448,
+                        426,
                         55,
                         20
                     ],
@@ -2411,7 +2555,7 @@
                     "numoutlets": 0,
                     "patching_rect": [
                         860,
-                        448,
+                        426,
                         50,
                         20
                     ],
@@ -2426,7 +2570,7 @@
                     "numoutlets": 1,
                     "patching_rect": [
                         690,
-                        475,
+                        450,
                         160,
                         22
                     ],
@@ -2444,7 +2588,7 @@
                     "numoutlets": 0,
                     "patching_rect": [
                         690,
-                        510,
+                        485,
                         50,
                         20
                     ],
@@ -2460,7 +2604,7 @@
                     "numoutlets": 2,
                     "patching_rect": [
                         690,
-                        532,
+                        507,
                         50,
                         22
                     ],
@@ -2478,7 +2622,7 @@
                     "numoutlets": 1,
                     "patching_rect": [
                         690,
-                        559,
+                        534,
                         38,
                         22
                     ],
@@ -2496,7 +2640,7 @@
                     "numoutlets": 1,
                     "patching_rect": [
                         690,
-                        586,
+                        561,
                         40,
                         22
                     ],
@@ -2514,7 +2658,7 @@
                     "numoutlets": 0,
                     "patching_rect": [
                         690,
-                        618,
+                        593,
                         80,
                         20
                     ],
@@ -2530,7 +2674,7 @@
                     "numoutlets": 2,
                     "patching_rect": [
                         690,
-                        640,
+                        615,
                         50,
                         22
                     ],
@@ -2548,7 +2692,7 @@
                     "numoutlets": 1,
                     "patching_rect": [
                         690,
-                        667,
+                        642,
                         38,
                         22
                     ],
@@ -2566,7 +2710,7 @@
                     "numoutlets": 22,
                     "patching_rect": [
                         690,
-                        700,
+                        680,
                         600,
                         22
                     ],
@@ -2605,7 +2749,7 @@
                     "numoutlets": 0,
                     "patching_rect": [
                         200,
-                        665,
+                        710,
                         40,
                         20
                     ],
@@ -2620,7 +2764,7 @@
                     "numoutlets": 0,
                     "patching_rect": [
                         350,
-                        665,
+                        710,
                         50,
                         20
                     ],
@@ -2635,7 +2779,7 @@
                     "numoutlets": 1,
                     "patching_rect": [
                         200,
-                        685,
+                        730,
                         30,
                         22
                     ],
@@ -2653,7 +2797,7 @@
                     "numoutlets": 1,
                     "patching_rect": [
                         200,
-                        715,
+                        760,
                         30,
                         22
                     ],
@@ -2671,7 +2815,7 @@
                     "numoutlets": 1,
                     "patching_rect": [
                         200,
-                        745,
+                        790,
                         30,
                         22
                     ],
@@ -2689,7 +2833,7 @@
                     "numoutlets": 1,
                     "patching_rect": [
                         350,
-                        685,
+                        730,
                         30,
                         22
                     ],
@@ -2707,7 +2851,7 @@
                     "numoutlets": 1,
                     "patching_rect": [
                         350,
-                        715,
+                        760,
                         30,
                         22
                     ],
@@ -2725,7 +2869,7 @@
                     "numoutlets": 1,
                     "patching_rect": [
                         350,
-                        745,
+                        790,
                         30,
                         22
                     ],
@@ -2743,7 +2887,7 @@
                     "numoutlets": 1,
                     "patching_rect": [
                         200,
-                        785,
+                        830,
                         30,
                         22
                     ],
@@ -2761,7 +2905,7 @@
                     "numoutlets": 1,
                     "patching_rect": [
                         350,
-                        785,
+                        830,
                         30,
                         22
                     ],
@@ -2779,7 +2923,7 @@
                     "numoutlets": 1,
                     "patching_rect": [
                         200,
-                        825,
+                        870,
                         40,
                         22
                     ],
@@ -2797,7 +2941,7 @@
                     "numoutlets": 1,
                     "patching_rect": [
                         350,
-                        825,
+                        870,
                         40,
                         22
                     ],
@@ -2815,7 +2959,7 @@
                     "numoutlets": 1,
                     "patching_rect": [
                         200,
-                        860,
+                        905,
                         100,
                         14
                     ],
@@ -2832,7 +2976,7 @@
                     "numoutlets": 1,
                     "patching_rect": [
                         350,
-                        860,
+                        905,
                         100,
                         14
                     ],
@@ -2849,7 +2993,7 @@
                     "numoutlets": 0,
                     "patching_rect": [
                         260,
-                        885,
+                        930,
                         45,
                         45
                     ]
@@ -2863,7 +3007,7 @@
                     "numoutlets": 0,
                     "patching_rect": [
                         690,
-                        740,
+                        720,
                         350,
                         20
                     ],
@@ -2878,11 +3022,11 @@
                     "numoutlets": 0,
                     "patching_rect": [
                         690,
-                        760,
-                        500,
+                        740,
+                        550,
                         20
                     ],
-                    "text": "adc~ -> pfft~/gizmo~ (pitch) -> fftz.mindwarp~ (formant warp) -> gain -> delay -> pan"
+                    "text": "adc~ -> pfft~/gizmo~ (PITCH shift) -> fftz.mindwarp~ (FORMANT warp, independent) -> gain -> pan"
                 }
             },
             {
@@ -2893,11 +3037,11 @@
                     "numoutlets": 0,
                     "patching_rect": [
                         690,
-                        780,
+                        760,
                         500,
                         20
                     ],
-                    "text": "Key Follow: retune~ detects pitch (MIDI note) -> harmony_engine snaps to scale"
+                    "text": "Each voice has its own pfft~ + mindwarp~ instance. Pitch and formant are SEPARATE controls."
                 }
             },
             {
@@ -2908,11 +3052,11 @@
                     "numoutlets": 0,
                     "patching_rect": [
                         690,
-                        800,
-                        380,
+                        780,
+                        400,
                         20
                     ],
-                    "text": "FFT: 2048pt overlap 4 (~46ms latency). Change to 4096 for quality."
+                    "text": "Key Follow: retune~ detects pitch -> harmony_engine snaps to scale"
                 }
             },
             {
@@ -2923,11 +3067,11 @@
                     "numoutlets": 0,
                     "patching_rect": [
                         690,
-                        820,
+                        800,
                         400,
                         20
                     ],
-                    "text": "Requires: FFTease package (for fftz.mindwarp~). Pitch detection via retune~ (built-in)."
+                    "text": "Requires: FFTease package (for fftz.mindwarp~). retune~ is built-in."
                 }
             }
         ],
@@ -3035,6 +3179,18 @@
                         0
                     ],
                     "destination": [
+                        "obj-v1-ratiosig",
+                        0
+                    ]
+                }
+            },
+            {
+                "patchline": {
+                    "source": [
+                        "obj-v1-ratiosig",
+                        0
+                    ],
+                    "destination": [
                         "obj-v1-pfft",
                         1
                     ]
@@ -3068,6 +3224,18 @@
                 "patchline": {
                     "source": [
                         "obj-v1-fmtsig",
+                        0
+                    ],
+                    "destination": [
+                        "obj-v1-fmtwarpsig",
+                        0
+                    ]
+                }
+            },
+            {
+                "patchline": {
+                    "source": [
+                        "obj-v1-fmtwarpsig",
                         0
                     ],
                     "destination": [
@@ -3275,6 +3443,18 @@
                         0
                     ],
                     "destination": [
+                        "obj-v2-ratiosig",
+                        0
+                    ]
+                }
+            },
+            {
+                "patchline": {
+                    "source": [
+                        "obj-v2-ratiosig",
+                        0
+                    ],
+                    "destination": [
                         "obj-v2-pfft",
                         1
                     ]
@@ -3308,6 +3488,18 @@
                 "patchline": {
                     "source": [
                         "obj-v2-fmtsig",
+                        0
+                    ],
+                    "destination": [
+                        "obj-v2-fmtwarpsig",
+                        0
+                    ]
+                }
+            },
+            {
+                "patchline": {
+                    "source": [
+                        "obj-v2-fmtwarpsig",
                         0
                     ],
                     "destination": [
@@ -3515,6 +3707,18 @@
                         0
                     ],
                     "destination": [
+                        "obj-v3-ratiosig",
+                        0
+                    ]
+                }
+            },
+            {
+                "patchline": {
+                    "source": [
+                        "obj-v3-ratiosig",
+                        0
+                    ],
+                    "destination": [
                         "obj-v3-pfft",
                         1
                     ]
@@ -3548,6 +3752,18 @@
                 "patchline": {
                     "source": [
                         "obj-v3-fmtsig",
+                        0
+                    ],
+                    "destination": [
+                        "obj-v3-fmtwarpsig",
+                        0
+                    ]
+                }
+            },
+            {
+                "patchline": {
+                    "source": [
+                        "obj-v3-fmtwarpsig",
                         0
                     ],
                     "destination": [
@@ -3755,6 +3971,18 @@
                         0
                     ],
                     "destination": [
+                        "obj-v4-ratiosig",
+                        0
+                    ]
+                }
+            },
+            {
+                "patchline": {
+                    "source": [
+                        "obj-v4-ratiosig",
+                        0
+                    ],
+                    "destination": [
                         "obj-v4-pfft",
                         1
                     ]
@@ -3788,6 +4016,18 @@
                 "patchline": {
                     "source": [
                         "obj-v4-fmtsig",
+                        0
+                    ],
+                    "destination": [
+                        "obj-v4-fmtwarpsig",
+                        0
+                    ]
+                }
+            },
+            {
+                "patchline": {
+                    "source": [
+                        "obj-v4-fmtwarpsig",
                         0
                     ],
                     "destination": [
