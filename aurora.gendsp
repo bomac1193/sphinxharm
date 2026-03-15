@@ -1,0 +1,109 @@
+{
+	"patcher": {
+		"fileversion": 1,
+		"appversion": {
+			"major": 8,
+			"minor": 6,
+			"revision": 0,
+			"architecture": "x64",
+			"modernui": 1
+		},
+		"classnamespace": "dsp.gen",
+		"rect": [0, 0, 800, 600],
+		"editing_bgcolor": [0.08, 0.08, 0.1, 1.0],
+		"boxes": [
+			{
+				"box": {
+					"id": "obj-in1",
+					"maxclass": "newobj",
+					"text": "in 1 @comment \"audio L\"",
+					"patching_rect": [50, 30, 150, 22]
+				}
+			},
+			{
+				"box": {
+					"id": "obj-in2",
+					"maxclass": "newobj",
+					"text": "in 2 @comment \"freeze 0-1\"",
+					"patching_rect": [220, 30, 150, 22]
+				}
+			},
+			{
+				"box": {
+					"id": "obj-in3",
+					"maxclass": "newobj",
+					"text": "in 3 @comment \"shimmer amt 0-1\"",
+					"patching_rect": [390, 30, 180, 22]
+				}
+			},
+			{
+				"box": {
+					"id": "obj-in4",
+					"maxclass": "newobj",
+					"text": "in 4 @comment \"diffusion 0-1\"",
+					"patching_rect": [590, 30, 170, 22]
+				}
+			},
+			{
+				"box": {
+					"id": "obj-in5",
+					"maxclass": "newobj",
+					"text": "in 5 @comment \"feedback 0-0.98\"",
+					"patching_rect": [50, 60, 180, 22]
+				}
+			},
+			{
+				"box": {
+					"id": "obj-in6",
+					"maxclass": "newobj",
+					"text": "in 6 @comment \"texture 0-1\"",
+					"patching_rect": [250, 60, 160, 22]
+				}
+			},
+			{
+				"box": {
+					"id": "obj-in7",
+					"maxclass": "newobj",
+					"text": "in 7 @comment \"mix 0-1\"",
+					"patching_rect": [430, 60, 140, 22]
+				}
+			},
+			{
+				"box": {
+					"id": "obj-code",
+					"maxclass": "newobj",
+					"text": "codebox",
+					"patching_rect": [50, 100, 720, 420],
+					"code": "// ═══════════════════════════════════════════════════════\n// A U R O R A — Spectral Shimmer Freeze\n// ═══════════════════════════════════════════════════════\n// Feed it anything. Hold freeze. Watch it become light.\n//\n// Granular freeze → shimmer pitch cascade → diffusion\n// network → harmonic resonance → stereo grain scatter\n// ═══════════════════════════════════════════════════════\n\n// ── Declarations (ALL must come before expressions) ──\n\nParam grain_size_ms(60, min=10, max=200);\nParam shimmer_interval(7, min=0, max=12);   // semitones (7=5th, 12=oct)\nParam damping(0.7, min=0, max=0.99);\n\n// Freeze buffer — 2 seconds capture\nBuffer freeze_buf(\"aurora_freeze\", 2);\nData freeze_len(1);\n\n// Grain playback phases (4 overlapping grains)\nHistory grain_ph1(0);\nHistory grain_ph2(0.25);\nHistory grain_ph3(0.5);\nHistory grain_ph4(0.75);\n\n// Write head for freeze capture\nHistory write_pos(0);\nHistory is_frozen(0);\nHistory freeze_crossfade(0);\n\n// Shimmer feedback memories\nHistory shimmer_accum_L(0);\nHistory shimmer_accum_R(0);\n\n// Diffusion allpass histories (4-stage Schroeder network)\nHistory ap1_buf(0);\nHistory ap2_buf(0);\nHistory ap3_buf(0);\nHistory ap4_buf(0);\nDelay ap1_del(4801);\nDelay ap2_del(3571);\nDelay ap3_del(2693);\nDelay ap4_del(1999);\n\n// Shimmer pitch shift delays (dual grain)\nDelay shim_del1(96000);\nDelay shim_del2(96000);\nHistory shim_ph1(0);\nHistory shim_ph2(0.5);\n\n// Comb resonators for harmonic glow\nDelay comb1(4800);\nDelay comb2(3600);\nDelay comb3(2880);\nHistory comb1_fb(0);\nHistory comb2_fb(0);\nHistory comb3_fb(0);\n\n// Noise sources for texture\nHistory noise_state(17);\n\n// ── Inputs ──\n\naudio = in1;\nfreeze_trig = in2;\nshimmer_amt = in3;\ndiffusion = in4;\nfeedback = clamp(in5, 0, 0.985);\ntexture = in6;\nmix = in7;\n\n// ── Cheap noise generator ──\n\nnoise_state = (noise_state * 1103515245 + 12345) % 2147483648;\ncheap_noise = noise_state / 2147483648.0 * 2.0 - 1.0;\n\n// ── Freeze capture & crossfade ──\n\nbuf_samples = dim(freeze_buf);\n\n// Smooth freeze transition\nfreeze_target = freeze_trig > 0.5;\nfreeze_crossfade = freeze_crossfade * 0.999 + freeze_target * 0.001;\nis_frozen = freeze_target;\n\n// Write into freeze buffer when not frozen\nif (!is_frozen) {\n    poke(freeze_buf, audio, write_pos / buf_samples, 0, 0);\n    write_pos = wrap(write_pos + 1, 0, buf_samples);\n    freeze_len.poke(write_pos, 0);\n}\n\n// ── Granular freeze playback ──\n// 4 overlapping grains with Hann windows reading from freeze buffer\n// Each grain has slight pitch/position randomization for life\n\ngrain_samples = grain_size_ms * samplerate / 1000.0;\ngrain_rate = 1.0 / grain_samples;\n\n// Texture adds random position jitter\njitter = texture * cheap_noise * 0.1;\n\n// Advance grain phases\ngrain_ph1 = wrap(grain_ph1 + grain_rate, 0, 1);\ngrain_ph2 = wrap(grain_ph2 + grain_rate, 0, 1);\ngrain_ph3 = wrap(grain_ph3 + grain_rate * (1 + jitter * 0.5), 0, 1);\ngrain_ph4 = wrap(grain_ph4 + grain_rate * (1 - jitter * 0.3), 0, 1);\n\n// Hann windows\npi = 3.14159265;\nw1 = sin(grain_ph1 * pi); w1 = w1 * w1;\nw2 = sin(grain_ph2 * pi); w2 = w2 * w2;\nw3 = sin(grain_ph3 * pi); w3 = w3 * w3;\nw4 = sin(grain_ph4 * pi); w4 = w4 * w4;\n\n// Read positions (normalized 0-1 in buffer)\ncurrent_len = freeze_len.peek(0);\nnorm_len = max(current_len / buf_samples, 0.01);\n\npos1 = wrap(grain_ph1 * norm_len + jitter * 0.05, 0, norm_len);\npos2 = wrap(grain_ph2 * norm_len + jitter * 0.08, 0, norm_len);\npos3 = wrap(grain_ph3 * norm_len - jitter * 0.03, 0, norm_len);\npos4 = wrap(grain_ph4 * norm_len + jitter * 0.11, 0, norm_len);\n\n// Sample from freeze buffer\ng1 = peek(freeze_buf, pos1, 0, 0) * w1;\ng2 = peek(freeze_buf, pos2, 0, 0) * w2;\ng3 = peek(freeze_buf, pos3, 0, 0) * w3;\ng4 = peek(freeze_buf, pos4, 0, 0) * w4;\n\nfrozen_audio = (g1 + g2 + g3 + g4) * 0.5;\n\n// Crossfade between live and frozen\nsource = audio * (1.0 - freeze_crossfade) + frozen_audio * freeze_crossfade;\n\n// ── Shimmer pitch cascade ──\n// Dual-grain pitch shift feeding back into itself\n// Each pass shifts up by shimmer_interval semitones\n\nshim_ratio = pow(2, shimmer_interval / 12.0);\nshim_win = 40 * samplerate / 1000.0;  // 40ms grains\nshim_rate = (1.0 - shim_ratio) / shim_win;\n\nshim_ph1 += shim_rate;\nshim_ph2 += shim_rate;\nshim_ph1 = wrap(shim_ph1, 0, 1);\nshim_ph2 = wrap(shim_ph2, 0, 1);\n\nshim_d1 = shim_ph1 * shim_win;\nshim_d2 = shim_ph2 * shim_win;\n\nsw1 = sin(shim_ph1 * pi); sw1 = sw1 * sw1;\nsw2 = sin(shim_ph2 * pi); sw2 = sw2 * sw2;\n\n// Feed source + feedback accumulator into shimmer\nshim_input = source + shimmer_accum_L * feedback;\nshim_del1.write(shim_input);\nshim_del2.write(shim_input);\n\nshimmered = shim_del1.read(shim_d1) * sw1 + shim_del2.read(shim_d2) * sw2;\n\n// Damping filter on feedback path (gentle LPF to prevent harshness)\nshimmer_accum_L = shimmer_accum_L * damping + shimmered * (1.0 - damping);\n\n// Mix shimmer amount\nshim_out = source * (1.0 - shimmer_amt) + shimmered * shimmer_amt;\n\n// ── 4-stage allpass diffusion network ──\n// Smears transients into a wash — the \"cloud\" factor\n// Prime-number delay lengths for maximum decorrelation\n\nap_coeff = diffusion * 0.6 + 0.1;  // 0.1 to 0.7\n\n// Allpass 1 (4799 samples ≈ 109ms)\nap1_in = shim_out;\nap1_delayed = ap1_del.read(4799);\nap1_out = ap1_delayed - ap1_in * ap_coeff;\nap1_del.write(ap1_in + ap1_delayed * ap_coeff);\n\n// Allpass 2 (3571 samples ≈ 81ms)\nap2_in = ap1_out;\nap2_delayed = ap2_del.read(3571);\nap2_out = ap2_delayed - ap2_in * ap_coeff;\nap2_del.write(ap2_in + ap2_delayed * ap_coeff);\n\n// Allpass 3 (2693 samples ≈ 61ms)\nap3_in = ap2_out;\nap3_delayed = ap3_del.read(2693);\nap3_out = ap3_delayed - ap3_in * ap_coeff;\nap3_del.write(ap3_in + ap3_delayed * ap_coeff);\n\n// Allpass 4 (1999 samples ≈ 45ms)\nap4_in = ap3_out;\nap4_delayed = ap4_del.read(1999);\nap4_out = ap4_delayed - ap4_in * ap_coeff;\nap4_del.write(ap4_in + ap4_delayed * ap_coeff);\n\ndiffused = ap4_out;\n\n// ── Harmonic resonator bank ──\n// 3 tuned comb filters that add harmonic glow\n// Tuned to musical intervals (root, 5th, octave+3rd)\n\ncomb_fb_amt = feedback * 0.5;\n\n// Comb 1: ~110Hz (A2) — root resonance\ncomb1_len = samplerate / 110.0;\ncomb1_out = comb1.read(comb1_len);\ncomb1.write(diffused + comb1_out * comb_fb_amt * damping);\n\n// Comb 2: ~165Hz (E3) — 5th resonance\ncomb2_len = samplerate / 165.0;\ncomb2_out = comb2.read(comb2_len);\ncomb2.write(diffused + comb2_out * comb_fb_amt * damping);\n\n// Comb 3: ~277Hz (C#4) — major 3rd up an octave\ncomb3_len = samplerate / 277.0;\ncomb3_out = comb3.read(comb3_len);\ncomb3.write(diffused + comb3_out * comb_fb_amt * damping * 0.7);\n\n// Blend resonators with texture control\nresonated = diffused * (1.0 - texture * 0.3) + \n            (comb1_out + comb2_out * 0.7 + comb3_out * 0.5) * texture * 0.15;\n\n// ── Stereo scatter ──\n// Distribute grains across stereo field using phase offsets\n\nstereo_mod = sin(elapsed * 0.3) * 0.3 + 0.5;  // slow LFO\nleft = resonated * stereo_mod + diffused * (1.0 - stereo_mod) * 0.5;\nright = resonated * (1.0 - stereo_mod) + diffused * stereo_mod * 0.5;\n\n// ── Soft saturation (keep feedback musical) ──\n\nleft = tanh(left * 1.5) * 0.67;\nright = tanh(right * 1.5) * 0.67;\n\n// ── Output with dry/wet ──\n\nout1 = audio * (1.0 - mix) + left * mix;\nout2 = audio * (1.0 - mix) + right * mix;\n"
+				}
+			},
+			{
+				"box": {
+					"id": "obj-out1",
+					"maxclass": "newobj",
+					"text": "out 1 @comment \"left\"",
+					"patching_rect": [50, 540, 130, 22]
+				}
+			},
+			{
+				"box": {
+					"id": "obj-out2",
+					"maxclass": "newobj",
+					"text": "out 2 @comment \"right\"",
+					"patching_rect": [400, 540, 130, 22]
+				}
+			}
+		],
+		"lines": [
+			{ "patchline": { "source": ["obj-in1", 0], "destination": ["obj-code", 0] } },
+			{ "patchline": { "source": ["obj-in2", 0], "destination": ["obj-code", 1] } },
+			{ "patchline": { "source": ["obj-in3", 0], "destination": ["obj-code", 2] } },
+			{ "patchline": { "source": ["obj-in4", 0], "destination": ["obj-code", 3] } },
+			{ "patchline": { "source": ["obj-in5", 0], "destination": ["obj-code", 4] } },
+			{ "patchline": { "source": ["obj-in6", 0], "destination": ["obj-code", 5] } },
+			{ "patchline": { "source": ["obj-in7", 0], "destination": ["obj-code", 6] } },
+			{ "patchline": { "source": ["obj-code", 0], "destination": ["obj-out1", 0] } },
+			{ "patchline": { "source": ["obj-code", 1], "destination": ["obj-out2", 0] } }
+		]
+	}
+}
