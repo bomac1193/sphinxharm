@@ -359,15 +359,15 @@
                 "box": {
                     "id": "obj-v1-ms2s",
                     "maxclass": "newobj",
-                    "numinlets": 2,
+                    "numinlets": 1,
                     "numoutlets": 1,
                     "patching_rect": [
                         230,
                         192,
-                        45,
+                        65,
                         22
                     ],
-                    "text": "*~ 44.1",
+                    "text": "mstosamps~",
                     "outlettype": [
                         "signal"
                     ]
@@ -380,7 +380,7 @@
                     "numinlets": 2,
                     "numoutlets": 1,
                     "patching_rect": [
-                        285,
+                        300,
                         192,
                         40,
                         22
@@ -416,7 +416,7 @@
                     "numinlets": 2,
                     "numoutlets": 1,
                     "patching_rect": [
-                        285,
+                        300,
                         246,
                         40,
                         22
@@ -809,15 +809,15 @@
                 "box": {
                     "id": "obj-v2-ms2s",
                     "maxclass": "newobj",
-                    "numinlets": 2,
+                    "numinlets": 1,
                     "numoutlets": 1,
                     "patching_rect": [
                         560,
                         192,
-                        45,
+                        65,
                         22
                     ],
-                    "text": "*~ 44.1",
+                    "text": "mstosamps~",
                     "outlettype": [
                         "signal"
                     ]
@@ -830,7 +830,7 @@
                     "numinlets": 2,
                     "numoutlets": 1,
                     "patching_rect": [
-                        615,
+                        630,
                         192,
                         40,
                         22
@@ -866,7 +866,7 @@
                     "numinlets": 2,
                     "numoutlets": 1,
                     "patching_rect": [
-                        615,
+                        630,
                         246,
                         40,
                         22
@@ -1259,15 +1259,15 @@
                 "box": {
                     "id": "obj-v3-ms2s",
                     "maxclass": "newobj",
-                    "numinlets": 2,
+                    "numinlets": 1,
                     "numoutlets": 1,
                     "patching_rect": [
                         230,
                         527,
-                        45,
+                        65,
                         22
                     ],
-                    "text": "*~ 44.1",
+                    "text": "mstosamps~",
                     "outlettype": [
                         "signal"
                     ]
@@ -1280,7 +1280,7 @@
                     "numinlets": 2,
                     "numoutlets": 1,
                     "patching_rect": [
-                        285,
+                        300,
                         527,
                         40,
                         22
@@ -1316,7 +1316,7 @@
                     "numinlets": 2,
                     "numoutlets": 1,
                     "patching_rect": [
-                        285,
+                        300,
                         581,
                         40,
                         22
@@ -1709,15 +1709,15 @@
                 "box": {
                     "id": "obj-v4-ms2s",
                     "maxclass": "newobj",
-                    "numinlets": 2,
+                    "numinlets": 1,
                     "numoutlets": 1,
                     "patching_rect": [
                         560,
                         527,
-                        45,
+                        65,
                         22
                     ],
-                    "text": "*~ 44.1",
+                    "text": "mstosamps~",
                     "outlettype": [
                         "signal"
                     ]
@@ -1730,7 +1730,7 @@
                     "numinlets": 2,
                     "numoutlets": 1,
                     "patching_rect": [
-                        615,
+                        630,
                         527,
                         40,
                         22
@@ -1766,7 +1766,7 @@
                     "numinlets": 2,
                     "numoutlets": 1,
                     "patching_rect": [
-                        615,
+                        630,
                         581,
                         40,
                         22
@@ -2445,13 +2445,31 @@
                     "numoutlets": 2,
                     "patching_rect": [
                         850,
-                        305,
+                        295,
                         55,
                         22
                     ],
                     "text": "retune~",
                     "outlettype": [
                         "signal",
+                        ""
+                    ]
+                }
+            },
+            {
+                "box": {
+                    "id": "obj-snap",
+                    "maxclass": "newobj",
+                    "numinlets": 2,
+                    "numoutlets": 1,
+                    "patching_rect": [
+                        850,
+                        320,
+                        75,
+                        22
+                    ],
+                    "text": "snapshot~ 50",
+                    "outlettype": [
                         ""
                     ]
                 }
@@ -4641,6 +4659,18 @@
                     "source": [
                         "obj-retune",
                         1
+                    ],
+                    "destination": [
+                        "obj-snap",
+                        0
+                    ]
+                }
+            },
+            {
+                "patchline": {
+                    "source": [
+                        "obj-snap",
+                        0
                     ],
                     "destination": [
                         "obj-harmony",

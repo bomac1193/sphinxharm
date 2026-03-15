@@ -97,16 +97,16 @@ def make_voice(n, bx, by):
     # fmtsig: fmt semi → pow(2, f/12) → float warp ratio
     box(f"{v}-fmtsig", "newobj", [bx+60, by+102, 128, 22], "expr pow(2.\\, $f1/12.)",
         numinlets=1, numoutlets=1, outlettype=[""])
-    box(f"{v}-ms2s", "newobj", [bx+200, by+102, 45, 22], "*~ 44.1",
-        numinlets=2, numoutlets=1, outlettype=["signal"])
-    box(f"{v}-phalf", "newobj", [bx+255, by+102, 40, 22], "*~ 0.5",
+    box(f"{v}-ms2s", "newobj", [bx+200, by+102, 65, 22], "mstosamps~",
+        numinlets=1, numoutlets=1, outlettype=["signal"])
+    box(f"{v}-phalf", "newobj", [bx+270, by+102, 40, 22], "*~ 0.5",
         numinlets=2, numoutlets=1, outlettype=["signal"])
 
     # Row C: formant warp sig~ + pan helpers (y+156 to clear send~ at y+132)
     # fmtwarpsig: converts float warp ratio → signal for mindwarp~
     box(f"{v}-fmtwarpsig", "newobj", [bx+60, by+156, 32, 22], "sig~",
         numinlets=1, numoutlets=1, outlettype=["signal"])
-    box(f"{v}-poff", "newobj", [bx+255, by+156, 40, 22], "+~ 0.5",
+    box(f"{v}-poff", "newobj", [bx+270, by+156, 40, 22], "+~ 0.5",
         numinlets=2, numoutlets=1, outlettype=["signal"])
     box(f"{v}-invp", "newobj", [bx+200, by+156, 50, 22], "!-~ 1.",
         numinlets=2, numoutlets=1, outlettype=["signal"])
@@ -148,7 +148,7 @@ def wire_voice(n):
     wire(f"{v}-gain", 0, f"{v}-dbtoa", 0)
     wire(f"{v}-dbtoa", 0, f"{v}-mult", 1)
 
-    # Delay: *~ → delay~ inlet 0, dly ms → sig~ → *~ 44.1 → delay~ inlet 1
+    # Delay: *~ → delay~ inlet 0, dly ms → sig~ → mstosamps~ → delay~ inlet 1
     wire(f"{v}-mult", 0, f"{v}-delay", 0)
     wire(f"{v}-dly", 0, f"{v}-dlysig", 0)
     wire(f"{v}-dlysig", 0, f"{v}-ms2s", 0)
@@ -216,9 +216,11 @@ box("obj-v3-prep", "newobj", [925, 269, 65, 22], "prepend v3",
 box("obj-v4-prep", "newobj", [1030, 269, 65, 22], "prepend v4",
     numinlets=1, numoutlets=1, outlettype=[""])
 
-# Pitch detection (retune~ outputs MIDI note directly on outlet 1)
-box("obj-retune", "newobj", [850, 305, 55, 22], "retune~",
+# Pitch detection (retune~ outlet 1 = signal, need snapshot~ to convert to float for js)
+box("obj-retune", "newobj", [850, 295, 55, 22], "retune~",
     numinlets=2, numoutlets=2, outlettype=["signal", ""])
+box("obj-snap", "newobj", [850, 320, 75, 22], "snapshot~ 50",
+    numinlets=2, numoutlets=1, outlettype=[""])
 
 # Harmony engine
 box("obj-harmony", "newobj", [690, 345, 280, 22], "js harmony_engine.js",
@@ -355,9 +357,10 @@ wire("obj-masterR", 0, "obj-ezdac", 1)
 wire("obj-key-menu", 0, "obj-harmony", 0)
 wire("obj-scale-menu", 0, "obj-harmony", 1)
 
-# Pitch detection (retune~ outlet 1 = detected MIDI note)
+# Pitch detection: retune~ signal → snapshot~ float → harmony js
 wire("obj-adc", 0, "obj-retune", 0)
-wire("obj-retune", 1, "obj-harmony", 2)
+wire("obj-retune", 1, "obj-snap", 0)
+wire("obj-snap", 0, "obj-harmony", 2)
 
 # Key Follow
 wire("obj-kf-toggle", 0, "obj-kf-prep", 0)
