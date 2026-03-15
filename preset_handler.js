@@ -1,78 +1,70 @@
 /*
-	Preset Handler for Sphinx Harmonizer
+	Preset Handler for Sphinxharm Spectral
 
-	Inlet 0: "Woods" preset (layered choir stack)
-	Inlet 1: "Choir" preset (Full choral stack)
-	Inlet 2: "Shimmer" preset (Eventide-style octave shimmer)
-	Inlet 3: "Dark" preset (Low, moody harmonies)
+	Inlet 0: bang = "Woods"
+	Inlet 1: bang = "Choir"
+	Inlet 2: bang = "Shimmer"
+	Inlet 3: bang = "Dark"
 
 	Outlet 0: messages to set voice parameters
+	  - v1_semi / v2_semi / v3_semi / v4_semi  (semitones)
+	  - v1_formant ... v4_formant               (semitones, tilt EQ)
+	  - v1_gain ... v4_gain                     (dB)
+	  - v1_delay ... v4_delay                   (ms)
+	  - v1_pan ... v4_pan                       (-1..1)
+	  - dry_gain                                (dB)
 */
 
 inlets = 4;
 outlets = 1;
 
 var presets = {
-	// Woods — tight unison/3rd stack, heavy formant, lots of reverb
-	// Layered choir-of-one sound
+	// Woods — tight choir stack, heavy formant, wide stereo
 	woods: {
 		voices: [
-			{ interval: "+3rd", formant: -3, gain: -3 },
-			{ interval: "+5th", formant: 0, gain: -4 },
-			{ interval: "+Oct", formant: 5, gain: -8 },
-			{ interval: "-Oct", formant: -7, gain: -6 }
+			{ semi: 4,   formant: -3,  gain: -3,  delay: 12,  pan: -0.4 },
+			{ semi: 7,   formant: 0,   gain: -4,  delay: 18,  pan: 0.4  },
+			{ semi: 12,  formant: 5,   gain: -8,  delay: 30,  pan: -0.7 },
+			{ semi: -12, formant: -7,  gain: -6,  delay: 45,  pan: 0.7  }
 		],
-		dry: -6,
-		detune: 12,
-		reverb_mix: 45,
-		reverb_size: 80
+		dry: -6
 	},
 
 	// Choir — full choral spread, natural formants
 	choir: {
 		voices: [
-			{ interval: "-5th", formant: -5, gain: -2 },
-			{ interval: "+3rd", formant: 2, gain: -2 },
-			{ interval: "+5th", formant: 0, gain: -3 },
-			{ interval: "+Oct", formant: 4, gain: -6 }
+			{ semi: -7,  formant: -5,  gain: -2,  delay: 8,   pan: -0.6 },
+			{ semi: 4,   formant: 2,   gain: -2,  delay: 15,  pan: 0.3  },
+			{ semi: 7,   formant: 0,   gain: -3,  delay: 22,  pan: -0.3 },
+			{ semi: 12,  formant: 4,   gain: -6,  delay: 35,  pan: 0.6  }
 		],
-		dry: 0,
-		detune: 8,
-		reverb_mix: 30,
-		reverb_size: 65
+		dry: 0
 	},
 
-	// Shimmer — Eventide-style octave up shimmer
+	// Shimmer — Eventide-style octave shimmer
 	shimmer: {
 		voices: [
-			{ interval: "+Oct", formant: 8, gain: -8 },
-			{ interval: "+Oct+5th", formant: 10, gain: -12 },
-			{ interval: "+5th", formant: 3, gain: -6 },
-			{ interval: "+2Oct", formant: 12, gain: -18 }
+			{ semi: 12,  formant: 8,   gain: -8,  delay: 20,  pan: -0.8 },
+			{ semi: 19,  formant: 10,  gain: -12, delay: 35,  pan: 0.8  },
+			{ semi: 7,   formant: 3,   gain: -6,  delay: 15,  pan: -0.3 },
+			{ semi: 24,  formant: 12,  gain: -18, delay: 50,  pan: 0.3  }
 		],
-		dry: 0,
-		detune: 15,
-		reverb_mix: 60,
-		reverb_size: 90
+		dry: 0
 	},
 
-	// Dark — low harmonies, formant shifted down
+	// Dark — low moody harmonies
 	dark: {
 		voices: [
-			{ interval: "-3rd", formant: -8, gain: 0 },
-			{ interval: "-5th", formant: -10, gain: -2 },
-			{ interval: "-Oct", formant: -12, gain: -4 },
-			{ interval: "Unison", formant: -5, gain: -6 }
+			{ semi: -3,  formant: -8,  gain: 0,   delay: 10,  pan: -0.5 },
+			{ semi: -7,  formant: -10, gain: -2,  delay: 20,  pan: 0.5  },
+			{ semi: -12, formant: -12, gain: -4,  delay: 40,  pan: -0.8 },
+			{ semi: 0,   formant: -5,  gain: -6,  delay: 5,   pan: 0.0  }
 		],
-		dry: -3,
-		detune: 5,
-		reverb_mix: 25,
-		reverb_size: 50
+		dry: -3
 	}
 };
 
 function msg_int(v) {
-	// v is ignored — we use the inlet number
 	var presetNames = ["woods", "choir", "shimmer", "dark"];
 	var name = presetNames[inlet];
 
@@ -87,24 +79,16 @@ function bang() {
 }
 
 function applyPreset(p) {
-	// Set each voice
 	for (var i = 0; i < p.voices.length; i++) {
 		var v = p.voices[i];
-		var voiceNum = i + 1;
+		var n = i + 1;
 
-		// Send interval name (for umenu)
-		outlet(0, "v" + voiceNum + "_interval", v.interval);
-
-		// Send formant shift
-		outlet(0, "v" + voiceNum + "_formant", v.formant);
-
-		// Send gain
-		outlet(0, "v" + voiceNum + "_gain", v.gain);
+		outlet(0, "v" + n + "_semi", v.semi);
+		outlet(0, "v" + n + "_formant", v.formant);
+		outlet(0, "v" + n + "_gain", v.gain);
+		outlet(0, "v" + n + "_delay", v.delay);
+		outlet(0, "v" + n + "_pan", v.pan);
 	}
 
-	// Global params
 	outlet(0, "dry_gain", p.dry);
-	outlet(0, "detune", p.detune);
-	outlet(0, "reverb_mix", p.reverb_mix);
-	outlet(0, "reverb_size", p.reverb_size);
 }

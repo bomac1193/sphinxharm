@@ -1,0 +1,26 @@
+{
+    "patcher": {
+        "fileversion": 1,
+        "appversion": { "major": 9, "minor": 1, "revision": 0, "architecture": "x64", "modernui": 1 },
+        "classnamespace": "dsp.gen",
+        "rect": [ 100.0, 100.0, 600.0, 350.0 ],
+        "boxes": [
+            { "box": { "id": "obj-in1", "maxclass": "newobj", "numinlets": 0, "numoutlets": 1, "outlettype": [ "" ], "patching_rect": [ 40.0, 30.0, 170.0, 22.0 ], "text": "in 1 @comment \"audio\"" } },
+            { "box": { "id": "obj-in2", "maxclass": "newobj", "numinlets": 0, "numoutlets": 1, "outlettype": [ "" ], "patching_rect": [ 250.0, 30.0, 270.0, 22.0 ], "text": "in 2 @comment \"formant semitones (-24..24)\"" } },
+            {
+                "box": {
+                    "id": "obj-code", "maxclass": "newobj", "numinlets": 2, "numoutlets": 1, "outlettype": [ "" ],
+                    "patching_rect": [ 40.0, 70.0, 500.0, 300.0 ], "text": "codebox",
+                    "code": "// ══════════════════════════════════════════════════\n// FORMANT TILT EQ\n// ══════════════════════════════════════════════════\n// Spectral tilt filter for formant character shaping.\n// Works by splitting signal at a crossover frequency,\n// then tilting the balance between low and high content.\n//\n// formant = 0:   transparent (no coloring)\n// formant > 0:   brighter (smaller vocal tract)\n// formant < 0:   darker (larger vocal tract)\n//\n// For true spectral formant shifting, install FFTease\n// package and use mindwarp~ instead of this gen~.\n// ══════════════════════════════════════════════════\n\nParam crossover(2000, min=500, max=8000);\nParam intensity(1.0, min=0.5, max=2.0);\n\nHistory lp(0);\n\naudio = in1;\nfmt_semi = in2;\n\n// Convert semitones to tilt amount (-1 to +1 range)\ntilt = clamp(fmt_semi / 12.0, -1.0, 1.0) * intensity;\n\n// One-pole lowpass for frequency splitting\ncoeff = clamp(crossover * 6.28318530718 / samplerate, 0.0001, 0.5);\nlp = lp + coeff * (audio - lp);\n\n// Tilt EQ: shift energy between low and high bands\n// audio + tilt * (audio - 2*lp)\n// When tilt > 0: boosts (audio - 2*lp) which emphasizes highs\n// When tilt < 0: subtracts it, emphasizing lows\nout1 = audio + tilt * (audio - 2.0 * lp);\n"
+                }
+            },
+            { "box": { "id": "obj-out1", "maxclass": "newobj", "numinlets": 1, "numoutlets": 0, "patching_rect": [ 40.0, 400.0, 160.0, 22.0 ], "text": "out 1 @comment \"shaped\"" } }
+        ],
+        "lines": [
+            { "patchline": { "source": [ "obj-in1", 0 ], "destination": [ "obj-code", 0 ] } },
+            { "patchline": { "source": [ "obj-in2", 0 ], "destination": [ "obj-code", 1 ] } },
+            { "patchline": { "source": [ "obj-code", 0 ], "destination": [ "obj-out1", 0 ] } }
+        ],
+        "autosave": 0
+    }
+}

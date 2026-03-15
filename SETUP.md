@@ -1,101 +1,134 @@
 # Sphinxharm — Setup Guide
 
+## Two Versions
+
+### `sphinxharm_spectral.maxpat` — RECOMMENDED (new)
+Spectral pitch shift via pfft~/gizmo~. Cleaner artifacts, better on large intervals.
+Formant shaping via tilt EQ (gen~ formant_eq).
+
+### `sphinxharm.maxpat` — Original (gen~ granular)
+Time-domain granular pitch shift. Lower latency, grittier sound.
+Keep for comparison — try both on your voice.
+
 ## Files
-- `sphinxharm.maxpat` — Main patch (open this)
-- `pitch_shift.gendsp` — gen~ granular pitch shifter (auto-loaded)
-- `harmony_engine.js` — Key/scale → semitone calculator
-- `preset_handler.js` — Preset system
+- `sphinxharm_spectral.maxpat` — Main spectral patch (open this)
+- `spectral_voice_fft.maxpat` — pfft~ sub-patch (auto-loaded by pfft~)
+- `formant_eq.gendsp` — gen~ formant tilt EQ (auto-loaded)
+- `harmony_engine.js` — Key/scale semitone calculator
+- `preset_handler.js` — Preset system (Woods/Choir/Shimmer/Dark)
+- `sphinxharm.maxpat` — Original gen~ version (for comparison)
+- `pitch_shift.gendsp` — gen~ granular pitch shifter (used by original)
+- `aurora.gendsp` — Spectral shimmer freeze (standalone effect)
 
 ## Quick Start
-1. Open `sphinxharm.maxpat` in Max 8+
-2. All files must be in the same folder (or add folder to Max search path)
-3. Turn on audio (DSP)
-4. Select your song's key and scale
-5. Pick intervals for each voice
-6. Adjust formant per voice for character
+1. Open `sphinxharm_spectral.maxpat` in Max 8+
+2. **All files must be in the same folder** (or add folder to Max search path)
+3. Turn on audio (DSP) — click the speaker icon
+4. Set semitones for each voice (+4=maj3rd, +7=5th, +12=oct)
+5. Set formant per voice (0=neutral, +bright, -dark)
+6. Adjust gain (dB), delay (ms), pan (-1..1)
 
-## Manual Wiring (if connections are missing)
-
-The .maxpat has the layout and objects. Some connections may need
-manual patching since JSON can be finicky. Here's the signal flow:
+## Signal Flow (Spectral Version)
 
 ```
-adc~ 1
-├──▶ gen~ pitch_shift (Voice 1) ──▶ *~ (V1 gain) ──┐
-├──▶ gen~ pitch_shift (Voice 2) ──▶ *~ (V2 gain) ──┤
-├──▶ gen~ pitch_shift (Voice 3) ──▶ *~ (V3 gain) ──┤  +~ chain
-├──▶ gen~ pitch_shift (Voice 4) ──▶ *~ (V4 gain) ──┤
-└──▶ *~ (dry gain) ────────────────────────────────┘
-                                                    │
-                                              +~ (sum all)
-                                                    │
-                                              *~ (master gain)
-                                                    │
-                                              dac~ 1 2
+adc~ 1 (mono mic)
+├──▶ pfft~/gizmo~ V1 (pitch) → formant_eq → *~ gain → delay~ → pan ──┐
+├──▶ pfft~/gizmo~ V2 (pitch) → formant_eq → *~ gain → delay~ → pan ──┤
+├──▶ pfft~/gizmo~ V3 (pitch) → formant_eq → *~ gain → delay~ → pan ──┤  stereo
+├──▶ pfft~/gizmo~ V4 (pitch) → formant_eq → *~ gain → delay~ → pan ──┤   sum
+└──▶ *~ dry gain ─────────────────────────────────────────────────────┘
+                                                                       │
+                                                              *~ master gain
+                                                                       │
+                                                                 dac~ 1 2
 ```
 
-### Each gen~ pitch_shift has 4 inlets:
-- **in 1**: audio (from adc~)
-- **in 2**: semitones (from harmony_engine.js or direct number)
-- **in 3**: formant shift in semitones (from live.dial)
-- **in 4**: mix (set to 1.0 for full wet on harmony voices)
+### pfft~ pitch shift
+- FFT size: 2048 (overlap 4) — ~46ms latency
+- Change to `pfft~ spectral_voice_fft 4096 4` for better quality (~93ms latency)
+- Semitones → ratio via `pow(2, semi/12)` → gizmo~ inside pfft~
 
-### For reverb (optional):
-Insert a reverb between the sum and master gain. Options:
-- `yafr2` (built-in, decent)
-- `gigaverb~` (free external, better)
-- `vst~ "ValhallaRoom"` (if you have it — best for this sound)
+### formant_eq (tilt EQ)
+- Input: semitones (-24 to +24)
+- 0 = transparent (no coloring)
+- Positive = brighter (smaller vocal tract character)
+- Negative = darker (larger vocal tract character)
+- Crossover at 2000Hz, one-pole split
 
 ## Preset Recipes
 
-### "Woods" (layered choir stack):
-- Key: Match your song
-- V1: +3rd, formant -3, gain -3dB
-- V2: +5th, formant 0, gain -4dB
-- V3: +Oct, formant +5, gain -8dB
-- V4: -Oct, formant -7, gain -6dB
-- Dry: -6dB (voices dominate)
-- Detune: 12 cents (width)
-- Reverb: 45% mix, large space
+### "Woods" (layered choir stack)
+- V1: +4st (maj3rd), fmt -3, gain -3dB, dly 12ms, pan -0.4
+- V2: +7st (5th), fmt 0, gain -4dB, dly 18ms, pan +0.4
+- V3: +12st (oct), fmt +5, gain -8dB, dly 30ms, pan -0.7
+- V4: -12st (oct dn), fmt -7, gain -6dB, dly 45ms, pan +0.7
+- Dry: -6dB
 
-### "Exposed" (simpler, fewer voices):
-- V1: +3rd, formant 0, gain -2dB
-- V2: +5th, formant 0, gain -4dB
-- V3: OFF
-- V4: OFF
+### "Choir" (full choral spread)
+- V1: -7st (5th dn), fmt -5, gain -2dB, dly 8ms, pan -0.6
+- V2: +4st (maj3rd), fmt +2, gain -2dB, dly 15ms, pan +0.3
+- V3: +7st (5th), fmt 0, gain -3dB, dly 22ms, pan -0.3
+- V4: +12st (oct), fmt +4, gain -6dB, dly 35ms, pan +0.6
 - Dry: 0dB
-- Detune: 5 cents
-- Reverb: 20%
 
-### "Shimmer" (octave shimmer):
-- V1: +Oct, formant +8, gain -8dB
-- V2: +Oct+5th, formant +10, gain -12dB
-- V3: +5th, formant +3, gain -6dB
-- V4: +2Oct, formant +12, gain -18dB
+### "Shimmer" (octave shimmer)
+- V1: +12st (oct), fmt +8, gain -8dB, dly 20ms, pan -0.8
+- V2: +19st (oct+5th), fmt +10, gain -12dB, dly 35ms, pan +0.8
+- V3: +7st (5th), fmt +3, gain -6dB, dly 15ms, pan -0.3
+- V4: +24st (2oct), fmt +12, gain -18dB, dly 50ms, pan +0.3
 - Dry: 0dB
-- Reverb: 60% mix, very large
+
+### "Dark" (low moody)
+- V1: -3st (min3rd dn), fmt -8, gain 0dB, dly 10ms, pan -0.5
+- V2: -7st (5th dn), fmt -10, gain -2dB, dly 20ms, pan +0.5
+- V3: -12st (oct dn), fmt -12, gain -4dB, dly 40ms, pan -0.8
+- V4: 0st (unison), fmt -5, gain -6dB, dly 5ms, pan 0
+- Dry: -3dB
 
 ## Formant Guide
 
-Formant shifting changes the vowel character without changing pitch:
-- **-12 to -6**: Deep, masculine, "demon" voice
-- **-5 to -2**: Slightly deeper, warm
-- **0**: Natural (no shift)
-- **+2 to +5**: Slightly brighter, younger
-- **+6 to +12**: Chipmunk / angelic / ethereal
+The tilt EQ shapes spectral brightness/darkness:
+- **-24 to -12**: Very deep, barrel-like
+- **-11 to -5**: Noticeably darker, warm
+- **-4 to -1**: Slightly warmer
+- **0**: Transparent (no coloring)
+- **+1 to +4**: Slightly brighter
+- **+5 to +11**: Noticeably brighter, airy
+- **+12 to +24**: Very bright, ethereal/chipmunk
 
-Key trick: shift formant OPPOSITE to pitch.
-- Voice pitched UP → formant shifted DOWN (keeps it human)
-- Voice pitched DOWN → formant shifted UP (avoids muddy bass)
+Key trick for natural harmonies: shift formant OPPOSITE to pitch.
+- Voice pitched UP → negative formant (keeps it grounded)
+- Voice pitched DOWN → positive formant (prevents mud)
 
-## Adding Pitch Tracking (Advanced)
+## FFTease Upgrade (Optional)
 
-For auto-following harmonies (like a real Eventide H9):
+For **true spectral formant shifting** instead of the tilt EQ approximation:
 
-1. Add `sigmund~` object for pitch detection
-2. Route detected MIDI note into `harmony_engine.js`
-3. The engine snaps to the nearest scale degree
-4. Semitone output feeds each voice's gen~
+1. Install FFTease from Max Package Manager
+2. After each pfft~ object, replace `gen~ @gen formant_eq` with `mindwarp~`
+3. mindwarp~ warp factor: `pow(2, formant_semitones / 12)`
+   - 1.0 = no change
+   - 2.0 = formant up one octave
+   - 0.5 = formant down one octave
 
-This turns it from manual intervals into automatic harmony
-that follows your singing in the selected key.
+mindwarp~ does real spectral envelope warping — dramatically better for
+extreme formant shifts and voice-like sounds.
+
+## Key/Scale (Harmony Engine)
+
+The key and scale menus feed `harmony_engine.js`. Currently for display.
+Future: auto-snap voice semitones to scale degrees for key-following harmonies.
+
+## Latency Notes
+
+- pfft~ 2048, overlap 4: ~46ms (good for live with monitoring)
+- pfft~ 4096, overlap 4: ~93ms (better quality, studio only)
+- Original gen~ version: ~5ms (lowest latency, grittier artifacts)
+- Choose based on your use case
+
+## Adding Reverb
+
+Insert between the stereo sum and master gain:
+- `yafr2` (built-in, decent)
+- `gigaverb~` (free external, better)
+- `vst~ "ValhallaRoom"` (best for this sound)
