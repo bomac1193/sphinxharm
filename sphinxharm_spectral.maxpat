@@ -3041,6 +3041,150 @@
                         0
                     ],
                     "destination": [
+                        "obj-v1-semi",
+                        0
+                    ]
+                }
+            },
+            {
+                "patchline": {
+                    "source": [
+                        "obj-init-msg",
+                        0
+                    ],
+                    "destination": [
+                        "obj-v2-semi",
+                        0
+                    ]
+                }
+            },
+            {
+                "patchline": {
+                    "source": [
+                        "obj-init-msg",
+                        0
+                    ],
+                    "destination": [
+                        "obj-v3-semi",
+                        0
+                    ]
+                }
+            },
+            {
+                "patchline": {
+                    "source": [
+                        "obj-init-msg",
+                        0
+                    ],
+                    "destination": [
+                        "obj-v4-semi",
+                        0
+                    ]
+                }
+            },
+            {
+                "patchline": {
+                    "source": [
+                        "obj-init-msg",
+                        0
+                    ],
+                    "destination": [
+                        "obj-v1-fmt",
+                        0
+                    ]
+                }
+            },
+            {
+                "patchline": {
+                    "source": [
+                        "obj-init-msg",
+                        0
+                    ],
+                    "destination": [
+                        "obj-v2-fmt",
+                        0
+                    ]
+                }
+            },
+            {
+                "patchline": {
+                    "source": [
+                        "obj-init-msg",
+                        0
+                    ],
+                    "destination": [
+                        "obj-v3-fmt",
+                        0
+                    ]
+                }
+            },
+            {
+                "patchline": {
+                    "source": [
+                        "obj-init-msg",
+                        0
+                    ],
+                    "destination": [
+                        "obj-v4-fmt",
+                        0
+                    ]
+                }
+            },
+            {
+                "patchline": {
+                    "source": [
+                        "obj-init-msg",
+                        0
+                    ],
+                    "destination": [
+                        "obj-v1-gain",
+                        0
+                    ]
+                }
+            },
+            {
+                "patchline": {
+                    "source": [
+                        "obj-init-msg",
+                        0
+                    ],
+                    "destination": [
+                        "obj-v2-gain",
+                        0
+                    ]
+                }
+            },
+            {
+                "patchline": {
+                    "source": [
+                        "obj-init-msg",
+                        0
+                    ],
+                    "destination": [
+                        "obj-v3-gain",
+                        0
+                    ]
+                }
+            },
+            {
+                "patchline": {
+                    "source": [
+                        "obj-init-msg",
+                        0
+                    ],
+                    "destination": [
+                        "obj-v4-gain",
+                        0
+                    ]
+                }
+            },
+            {
+                "patchline": {
+                    "source": [
+                        "obj-init-msg",
+                        0
+                    ],
+                    "destination": [
                         "obj-v1-pan",
                         0
                     ]
@@ -3078,6 +3222,78 @@
                     ],
                     "destination": [
                         "obj-v4-pan",
+                        0
+                    ]
+                }
+            },
+            {
+                "patchline": {
+                    "source": [
+                        "obj-init-msg",
+                        0
+                    ],
+                    "destination": [
+                        "obj-v1-dly",
+                        0
+                    ]
+                }
+            },
+            {
+                "patchline": {
+                    "source": [
+                        "obj-init-msg",
+                        0
+                    ],
+                    "destination": [
+                        "obj-v2-dly",
+                        0
+                    ]
+                }
+            },
+            {
+                "patchline": {
+                    "source": [
+                        "obj-init-msg",
+                        0
+                    ],
+                    "destination": [
+                        "obj-v3-dly",
+                        0
+                    ]
+                }
+            },
+            {
+                "patchline": {
+                    "source": [
+                        "obj-init-msg",
+                        0
+                    ],
+                    "destination": [
+                        "obj-v4-dly",
+                        0
+                    ]
+                }
+            },
+            {
+                "patchline": {
+                    "source": [
+                        "obj-init-msg",
+                        0
+                    ],
+                    "destination": [
+                        "obj-dry-gain",
+                        0
+                    ]
+                }
+            },
+            {
+                "patchline": {
+                    "source": [
+                        "obj-init-msg",
+                        0
+                    ],
+                    "destination": [
+                        "obj-master-val",
                         0
                     ]
                 }
