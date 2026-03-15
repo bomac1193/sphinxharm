@@ -114,10 +114,31 @@ If FFTease is not installed, replace each `mindwarp~ 2048 4` with
 The `formant_eq.gendsp` file provides a tilt EQ approximation that works
 without any external packages.
 
-## Key/Scale (Harmony Engine)
+## Key-Following (Harmony Engine)
 
-The key and scale menus feed `harmony_engine.js`. Currently for display.
-Future: auto-snap voice semitones to scale degrees for key-following harmonies.
+When **Key Follow** is ON, the harmony engine uses `sigmund~` to detect your
+sung pitch and automatically adjusts each voice's semitone shift so harmonies
+stay in the selected key and scale.
+
+### How it works
+1. Set key (C, D, etc.) and scale (Major, Minor, Dorian, etc.)
+2. Set each voice to a musical interval (+3rd, +5th, +Oct, -Oct, etc.)
+3. Toggle **Key Follow** ON
+4. As you sing, the harmony adapts:
+   - In C major, singing C with voice set to "+3rd" → +4 semitones (C→E)
+   - Singing D with "+3rd" → +3 semitones (D→F)
+   - Singing E with "+3rd" → +3 semitones (E→G)
+
+The shift amount changes in real-time to keep harmonies diatonic.
+
+### Without Key Follow
+When Key Follow is OFF, voices use fixed semitone values (manual flonums or
+presets). This gives you a constant interval regardless of what you sing —
+useful for parallel harmony effects.
+
+### Pitch detection
+Uses `sigmund~` with `@minpower 40` — only responds when you're singing above
+the noise floor. Converted to MIDI note via `ftom`.
 
 ## Latency Notes
 

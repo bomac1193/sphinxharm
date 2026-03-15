@@ -130,19 +130,41 @@
             { "box": { "id": "obj-key-lbl", "maxclass": "comment", "numinlets": 1, "numoutlets": 0, "patching_rect": [ 700.0, 310.0, 160.0, 20.0 ], "text": "KEY / SCALE", "fontface": 1 } },
             { "box": { "id": "obj-key-menu", "maxclass": "umenu", "numinlets": 1, "numoutlets": 3, "outlettype": [ "int", "", "" ], "patching_rect": [ 700.0, 335.0, 70.0, 22.0 ], "items": [ "C", ",", "C#", ",", "D", ",", "Eb", ",", "E", ",", "F", ",", "F#", ",", "G", ",", "Ab", ",", "A", ",", "Bb", ",", "B" ] } },
             { "box": { "id": "obj-scale-menu", "maxclass": "umenu", "numinlets": 1, "numoutlets": 3, "outlettype": [ "int", "", "" ], "patching_rect": [ 780.0, 335.0, 100.0, 22.0 ], "items": [ "Major", ",", "Minor", ",", "Dorian", ",", "Mixolydian", ",", "Pent Maj", ",", "Pent Min", ",", "Chromatic" ] } },
-            { "box": { "id": "obj-harmony", "maxclass": "newobj", "numinlets": 2, "numoutlets": 1, "outlettype": [ "" ], "patching_rect": [ 700.0, 370.0, 140.0, 22.0 ], "text": "js harmony_engine.js" } },
 
-            { "box": { "id": "obj-preset-lbl", "maxclass": "comment", "numinlets": 1, "numoutlets": 0, "patching_rect": [ 700.0, 410.0, 160.0, 20.0 ], "text": "PRESETS", "fontface": 1 } },
-            { "box": { "id": "obj-preset-woods", "maxclass": "message", "numinlets": 2, "numoutlets": 1, "outlettype": [ "" ], "patching_rect": [ 700.0, 435.0, 50.0, 22.0 ], "text": "bang" } },
-            { "box": { "id": "obj-preset-choir", "maxclass": "message", "numinlets": 2, "numoutlets": 1, "outlettype": [ "" ], "patching_rect": [ 755.0, 435.0, 50.0, 22.0 ], "text": "bang" } },
-            { "box": { "id": "obj-preset-shimmer", "maxclass": "message", "numinlets": 2, "numoutlets": 1, "outlettype": [ "" ], "patching_rect": [ 810.0, 435.0, 55.0, 22.0 ], "text": "bang" } },
-            { "box": { "id": "obj-preset-dark", "maxclass": "message", "numinlets": 2, "numoutlets": 1, "outlettype": [ "" ], "patching_rect": [ 870.0, 435.0, 50.0, 22.0 ], "text": "bang" } },
-            { "box": { "id": "obj-plbl-w", "maxclass": "comment", "numinlets": 1, "numoutlets": 0, "patching_rect": [ 700.0, 458.0, 50.0, 20.0 ], "text": "Woods" } },
-            { "box": { "id": "obj-plbl-c", "maxclass": "comment", "numinlets": 1, "numoutlets": 0, "patching_rect": [ 755.0, 458.0, 50.0, 20.0 ], "text": "Choir" } },
-            { "box": { "id": "obj-plbl-s", "maxclass": "comment", "numinlets": 1, "numoutlets": 0, "patching_rect": [ 810.0, 458.0, 55.0, 20.0 ], "text": "Shimmer" } },
-            { "box": { "id": "obj-plbl-d", "maxclass": "comment", "numinlets": 1, "numoutlets": 0, "patching_rect": [ 870.0, 458.0, 50.0, 20.0 ], "text": "Dark" } },
-            { "box": { "id": "obj-presets", "maxclass": "newobj", "numinlets": 4, "numoutlets": 1, "outlettype": [ "" ], "patching_rect": [ 700.0, 485.0, 160.0, 22.0 ], "text": "js preset_handler.js" } },
-            { "box": { "id": "obj-route-presets", "maxclass": "newobj", "numinlets": 1, "numoutlets": 22, "outlettype": [ "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "" ], "patching_rect": [ 700.0, 515.0, 600.0, 22.0 ], "text": "route v1_semi v2_semi v3_semi v4_semi v1_formant v2_formant v3_formant v4_formant v1_gain v2_gain v3_gain v4_gain v1_delay v2_delay v3_delay v4_delay v1_pan v2_pan v3_pan v4_pan dry_gain" } },
+            { "box": { "id": "obj-sigmund", "maxclass": "newobj", "numinlets": 1, "numoutlets": 2, "outlettype": [ "float", "float" ], "patching_rect": [ 950.0, 310.0, 175.0, 22.0 ], "text": "sigmund~ @npitch 1 @minpower 40" } },
+            { "box": { "id": "obj-ftom", "maxclass": "newobj", "numinlets": 1, "numoutlets": 1, "outlettype": [ "" ], "patching_rect": [ 950.0, 340.0, 35.0, 22.0 ], "text": "ftom" } },
+
+            { "box": { "id": "obj-kf-lbl", "maxclass": "comment", "numinlets": 1, "numoutlets": 0, "patching_rect": [ 910.0, 337.0, 80.0, 20.0 ], "text": "Key Follow" } },
+            { "box": { "id": "obj-kf-toggle", "maxclass": "toggle", "numinlets": 1, "numoutlets": 1, "outlettype": [ "int" ], "patching_rect": [ 890.0, 335.0, 18.0, 18.0 ] } },
+            { "box": { "id": "obj-kf-prep", "maxclass": "newobj", "numinlets": 1, "numoutlets": 1, "outlettype": [ "" ], "patching_rect": [ 890.0, 365.0, 95.0, 22.0 ], "text": "prepend keyfollow" } },
+
+            { "box": { "id": "obj-harmony", "maxclass": "newobj", "numinlets": 3, "numoutlets": 1, "outlettype": [ "" ], "patching_rect": [ 700.0, 395.0, 280.0, 22.0 ], "text": "js harmony_engine.js" } },
+
+            { "box": { "id": "obj-int-lbl", "maxclass": "comment", "numinlets": 1, "numoutlets": 0, "patching_rect": [ 700.0, 425.0, 280.0, 20.0 ], "text": "VOICE INTERVALS (active when Key Follow ON)", "fontface": 1 } },
+            { "box": { "id": "obj-int-v1lbl", "maxclass": "comment", "numinlets": 1, "numoutlets": 0, "patching_rect": [ 700.0, 445.0, 30.0, 20.0 ], "text": "V1" } },
+            { "box": { "id": "obj-int-v2lbl", "maxclass": "comment", "numinlets": 1, "numoutlets": 0, "patching_rect": [ 790.0, 445.0, 30.0, 20.0 ], "text": "V2" } },
+            { "box": { "id": "obj-int-v3lbl", "maxclass": "comment", "numinlets": 1, "numoutlets": 0, "patching_rect": [ 880.0, 445.0, 30.0, 20.0 ], "text": "V3" } },
+            { "box": { "id": "obj-int-v4lbl", "maxclass": "comment", "numinlets": 1, "numoutlets": 0, "patching_rect": [ 970.0, 445.0, 30.0, 20.0 ], "text": "V4" } },
+            { "box": { "id": "obj-v1-int", "maxclass": "umenu", "numinlets": 1, "numoutlets": 3, "outlettype": [ "int", "", "" ], "patching_rect": [ 720.0, 445.0, 65.0, 22.0 ], "items": [ "OFF", ",", "Unison", ",", "+2nd", ",", "+3rd", ",", "+4th", ",", "+5th", ",", "+6th", ",", "+7th", ",", "+Oct", ",", "+Oct+3rd", ",", "+Oct+5th", ",", "+2Oct", ",", "-2nd", ",", "-3rd", ",", "-4th", ",", "-5th", ",", "-6th", ",", "-7th", ",", "-Oct", ",", "-Oct-3rd" ] } },
+            { "box": { "id": "obj-v2-int", "maxclass": "umenu", "numinlets": 1, "numoutlets": 3, "outlettype": [ "int", "", "" ], "patching_rect": [ 810.0, 445.0, 65.0, 22.0 ], "items": [ "OFF", ",", "Unison", ",", "+2nd", ",", "+3rd", ",", "+4th", ",", "+5th", ",", "+6th", ",", "+7th", ",", "+Oct", ",", "+Oct+3rd", ",", "+Oct+5th", ",", "+2Oct", ",", "-2nd", ",", "-3rd", ",", "-4th", ",", "-5th", ",", "-6th", ",", "-7th", ",", "-Oct", ",", "-Oct-3rd" ] } },
+            { "box": { "id": "obj-v3-int", "maxclass": "umenu", "numinlets": 1, "numoutlets": 3, "outlettype": [ "int", "", "" ], "patching_rect": [ 900.0, 445.0, 65.0, 22.0 ], "items": [ "OFF", ",", "Unison", ",", "+2nd", ",", "+3rd", ",", "+4th", ",", "+5th", ",", "+6th", ",", "+7th", ",", "+Oct", ",", "+Oct+3rd", ",", "+Oct+5th", ",", "+2Oct", ",", "-2nd", ",", "-3rd", ",", "-4th", ",", "-5th", ",", "-6th", ",", "-7th", ",", "-Oct", ",", "-Oct-3rd" ] } },
+            { "box": { "id": "obj-v4-int", "maxclass": "umenu", "numinlets": 1, "numoutlets": 3, "outlettype": [ "int", "", "" ], "patching_rect": [ 990.0, 445.0, 65.0, 22.0 ], "items": [ "OFF", ",", "Unison", ",", "+2nd", ",", "+3rd", ",", "+4th", ",", "+5th", ",", "+6th", ",", "+7th", ",", "+Oct", ",", "+Oct+3rd", ",", "+Oct+5th", ",", "+2Oct", ",", "-2nd", ",", "-3rd", ",", "-4th", ",", "-5th", ",", "-6th", ",", "-7th", ",", "-Oct", ",", "-Oct-3rd" ] } },
+            { "box": { "id": "obj-v1-prep", "maxclass": "newobj", "numinlets": 1, "numoutlets": 1, "outlettype": [ "" ], "patching_rect": [ 720.0, 472.0, 65.0, 22.0 ], "text": "prepend v1" } },
+            { "box": { "id": "obj-v2-prep", "maxclass": "newobj", "numinlets": 1, "numoutlets": 1, "outlettype": [ "" ], "patching_rect": [ 810.0, 472.0, 65.0, 22.0 ], "text": "prepend v2" } },
+            { "box": { "id": "obj-v3-prep", "maxclass": "newobj", "numinlets": 1, "numoutlets": 1, "outlettype": [ "" ], "patching_rect": [ 900.0, 472.0, 65.0, 22.0 ], "text": "prepend v3" } },
+            { "box": { "id": "obj-v4-prep", "maxclass": "newobj", "numinlets": 1, "numoutlets": 1, "outlettype": [ "" ], "patching_rect": [ 990.0, 472.0, 65.0, 22.0 ], "text": "prepend v4" } },
+
+            { "box": { "id": "obj-preset-lbl", "maxclass": "comment", "numinlets": 1, "numoutlets": 0, "patching_rect": [ 700.0, 510.0, 160.0, 20.0 ], "text": "PRESETS", "fontface": 1 } },
+            { "box": { "id": "obj-preset-woods", "maxclass": "message", "numinlets": 2, "numoutlets": 1, "outlettype": [ "" ], "patching_rect": [ 700.0, 535.0, 50.0, 22.0 ], "text": "bang" } },
+            { "box": { "id": "obj-preset-choir", "maxclass": "message", "numinlets": 2, "numoutlets": 1, "outlettype": [ "" ], "patching_rect": [ 755.0, 535.0, 50.0, 22.0 ], "text": "bang" } },
+            { "box": { "id": "obj-preset-shimmer", "maxclass": "message", "numinlets": 2, "numoutlets": 1, "outlettype": [ "" ], "patching_rect": [ 810.0, 535.0, 55.0, 22.0 ], "text": "bang" } },
+            { "box": { "id": "obj-preset-dark", "maxclass": "message", "numinlets": 2, "numoutlets": 1, "outlettype": [ "" ], "patching_rect": [ 870.0, 535.0, 50.0, 22.0 ], "text": "bang" } },
+            { "box": { "id": "obj-plbl-w", "maxclass": "comment", "numinlets": 1, "numoutlets": 0, "patching_rect": [ 700.0, 558.0, 50.0, 20.0 ], "text": "Woods" } },
+            { "box": { "id": "obj-plbl-c", "maxclass": "comment", "numinlets": 1, "numoutlets": 0, "patching_rect": [ 755.0, 558.0, 50.0, 20.0 ], "text": "Choir" } },
+            { "box": { "id": "obj-plbl-s", "maxclass": "comment", "numinlets": 1, "numoutlets": 0, "patching_rect": [ 810.0, 558.0, 55.0, 20.0 ], "text": "Shimmer" } },
+            { "box": { "id": "obj-plbl-d", "maxclass": "comment", "numinlets": 1, "numoutlets": 0, "patching_rect": [ 870.0, 558.0, 50.0, 20.0 ], "text": "Dark" } },
+            { "box": { "id": "obj-presets", "maxclass": "newobj", "numinlets": 4, "numoutlets": 1, "outlettype": [ "" ], "patching_rect": [ 700.0, 585.0, 160.0, 22.0 ], "text": "js preset_handler.js" } },
+            { "box": { "id": "obj-route-presets", "maxclass": "newobj", "numinlets": 1, "numoutlets": 22, "outlettype": [ "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "" ], "patching_rect": [ 700.0, 615.0, 600.0, 22.0 ], "text": "route v1_semi v2_semi v3_semi v4_semi v1_formant v2_formant v3_formant v4_formant v1_gain v2_gain v3_gain v4_gain v1_delay v2_delay v3_delay v4_delay v1_pan v2_pan v3_pan v4_pan dry_gain" } },
 
             { "box": { "id": "obj-lbl-left", "maxclass": "comment", "numinlets": 1, "numoutlets": 0, "patching_rect": [ 200.0, 610.0, 40.0, 20.0 ], "text": "LEFT" } },
             { "box": { "id": "obj-lbl-right", "maxclass": "comment", "numinlets": 1, "numoutlets": 0, "patching_rect": [ 350.0, 610.0, 50.0, 20.0 ], "text": "RIGHT" } },
@@ -164,11 +186,11 @@
             { "box": { "id": "obj-meterR", "maxclass": "meter~", "numinlets": 1, "numoutlets": 1, "outlettype": [ "float" ], "patching_rect": [ 350.0, 810.0, 100.0, 14.0 ] } },
             { "box": { "id": "obj-ezdac", "maxclass": "ezdac~", "numinlets": 2, "numoutlets": 0, "patching_rect": [ 260.0, 840.0, 45.0, 45.0 ] } },
 
-            { "box": { "id": "obj-info1", "maxclass": "comment", "numinlets": 1, "numoutlets": 0, "patching_rect": [ 700.0, 560.0, 350.0, 20.0 ], "text": "SIGNAL FLOW:" } },
-            { "box": { "id": "obj-info2", "maxclass": "comment", "numinlets": 1, "numoutlets": 0, "patching_rect": [ 700.0, 580.0, 450.0, 20.0 ], "text": "adc~ -> pfft~/gizmo~ (pitch) -> mindwarp~ (formant warp) -> gain -> pan" } },
-            { "box": { "id": "obj-info3", "maxclass": "comment", "numinlets": 1, "numoutlets": 0, "patching_rect": [ 700.0, 600.0, 450.0, 20.0 ], "text": "Formant warp: semi -> pow(2,s/12) -> mindwarp~. 0=none, +12=up oct, -12=dn oct" } },
-            { "box": { "id": "obj-info4", "maxclass": "comment", "numinlets": 1, "numoutlets": 0, "patching_rect": [ 700.0, 620.0, 380.0, 20.0 ], "text": "FFT: 2048pt overlap 4 (~46ms latency). Change to 4096 for quality." } },
-            { "box": { "id": "obj-info5", "maxclass": "comment", "numinlets": 1, "numoutlets": 0, "patching_rect": [ 700.0, 640.0, 450.0, 20.0 ], "text": "REQUIRES: FFTease package (Max Package Manager). For fallback see formant_eq.gendsp" } }
+            { "box": { "id": "obj-info1", "maxclass": "comment", "numinlets": 1, "numoutlets": 0, "patching_rect": [ 700.0, 660.0, 350.0, 20.0 ], "text": "SIGNAL FLOW:" } },
+            { "box": { "id": "obj-info2", "maxclass": "comment", "numinlets": 1, "numoutlets": 0, "patching_rect": [ 700.0, 680.0, 450.0, 20.0 ], "text": "adc~ -> pfft~/gizmo~ (pitch) -> mindwarp~ (formant warp) -> gain -> pan" } },
+            { "box": { "id": "obj-info3", "maxclass": "comment", "numinlets": 1, "numoutlets": 0, "patching_rect": [ 700.0, 700.0, 450.0, 20.0 ], "text": "Key Follow: sigmund~ detects pitch, harmony_engine snaps to scale" } },
+            { "box": { "id": "obj-info4", "maxclass": "comment", "numinlets": 1, "numoutlets": 0, "patching_rect": [ 700.0, 720.0, 380.0, 20.0 ], "text": "FFT: 2048pt overlap 4 (~46ms latency). Change to 4096 for quality." } },
+            { "box": { "id": "obj-info5", "maxclass": "comment", "numinlets": 1, "numoutlets": 0, "patching_rect": [ 700.0, 740.0, 450.0, 20.0 ], "text": "REQUIRES: FFTease package (Max Package Manager). For fallback see formant_eq.gendsp" } }
         ],
         "lines": [
             { "patchline": { "source": [ "obj-adc", 0 ], "destination": [ "obj-in-meter", 0 ] } },
@@ -303,6 +325,24 @@
 
             { "patchline": { "source": [ "obj-key-menu", 0 ], "destination": [ "obj-harmony", 0 ] } },
             { "patchline": { "source": [ "obj-scale-menu", 0 ], "destination": [ "obj-harmony", 1 ] } },
+
+            { "patchline": { "source": [ "obj-adc", 0 ], "destination": [ "obj-sigmund", 0 ] } },
+            { "patchline": { "source": [ "obj-sigmund", 0 ], "destination": [ "obj-ftom", 0 ] } },
+            { "patchline": { "source": [ "obj-ftom", 0 ], "destination": [ "obj-harmony", 2 ] } },
+
+            { "patchline": { "source": [ "obj-kf-toggle", 0 ], "destination": [ "obj-kf-prep", 0 ] } },
+            { "patchline": { "source": [ "obj-kf-prep", 0 ], "destination": [ "obj-harmony", 0 ] } },
+
+            { "patchline": { "source": [ "obj-v1-int", 1 ], "destination": [ "obj-v1-prep", 0 ] } },
+            { "patchline": { "source": [ "obj-v2-int", 1 ], "destination": [ "obj-v2-prep", 0 ] } },
+            { "patchline": { "source": [ "obj-v3-int", 1 ], "destination": [ "obj-v3-prep", 0 ] } },
+            { "patchline": { "source": [ "obj-v4-int", 1 ], "destination": [ "obj-v4-prep", 0 ] } },
+            { "patchline": { "source": [ "obj-v1-prep", 0 ], "destination": [ "obj-harmony", 0 ] } },
+            { "patchline": { "source": [ "obj-v2-prep", 0 ], "destination": [ "obj-harmony", 0 ] } },
+            { "patchline": { "source": [ "obj-v3-prep", 0 ], "destination": [ "obj-harmony", 0 ] } },
+            { "patchline": { "source": [ "obj-v4-prep", 0 ], "destination": [ "obj-harmony", 0 ] } },
+
+            { "patchline": { "source": [ "obj-harmony", 0 ], "destination": [ "obj-route-presets", 0 ] } },
 
             { "patchline": { "source": [ "obj-preset-woods", 0 ], "destination": [ "obj-presets", 0 ] } },
             { "patchline": { "source": [ "obj-preset-choir", 0 ], "destination": [ "obj-presets", 1 ] } },

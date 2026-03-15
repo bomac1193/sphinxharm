@@ -271,13 +271,13 @@ cmake --build build --config Release
 ## Next Steps (In Order)
 
 ### NOW — Max Experimentation
-1. Install FFTease from Max Package Manager
-2. Replace gen~ pitch shifting with pfft~ + gizmo~ on one voice
-3. Add mindwarp~ after pfft~ for formant warping
+1. ~~Install FFTease from Max Package Manager~~ (patch uses mindwarp~, install when opening)
+2. ~~Replace gen~ pitch shifting with pfft~ + gizmo~ on one voice~~ DONE
+3. ~~Add mindwarp~ after pfft~ for formant warping~~ DONE
 4. Compare quality: gen~ granular vs pfft~ spectral
 5. Find the formant range that sounds best on your voice
-6. Wire up harmony_engine.js for key-following
-7. Build 3-5 presets you love
+6. ~~Wire up harmony_engine.js for key-following~~ DONE (sigmund~ pitch detect + scale-aware intervals)
+7. ~~Build 3-5 presets you love~~ DONE (Woods, Choir, Shimmer, Dark)
 8. Perform with it. Note what's missing.
 
 ### LATER — JUCE Port
