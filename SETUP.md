@@ -49,8 +49,11 @@ adc~ 1 (mono mic)
 
 ### pfft~ pitch shift
 - FFT size: 2048 (overlap 4) — ~46ms latency
-- Change to `pfft~ spectral_voice_fft 4096 4` for better quality (~93ms latency)
-- Semitones → ratio via `pow(2, semi/12)` → gizmo~ inside pfft~
+- Change to `pfft~ spectral_voice_fft 4096 4 N` for better quality (~93ms latency)
+- Semitones → ratio via `pow(2, semi/12)` → sig~ → `send~ sharm_rN`
+- Inside pfft~ subpatch: `receive~ sharm_r#1` feeds ratio to gizmo~
+- Voice number N (1-4) is passed as pfft~'s 4th argument, which replaces `#1` in the subpatch
+- This send~/receive~ approach bypasses pfft~ inlet limitations for reliable per-voice control
 
 ### fftz.mindwarp~ (FFTease spectral formant warping)
 - Input: semitones (-24 to +24), converted to warp ratio via `pow(2, semi/12)`

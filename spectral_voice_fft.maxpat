@@ -5,19 +5,18 @@
         "classnamespace": "box",
         "rect": [ 150.0, 150.0, 500.0, 350.0 ],
         "boxes": [
-            { "box": { "id": "obj-title", "maxclass": "comment", "numinlets": 1, "numoutlets": 0, "patching_rect": [ 20.0, 10.0, 450.0, 20.0 ], "text": "pfft~ sub-patch: gizmo~ pitch shift (spectral domain)" } },
+            { "box": { "id": "obj-title", "maxclass": "comment", "numinlets": 1, "numoutlets": 0, "patching_rect": [ 20.0, 10.0, 460.0, 20.0 ], "text": "pfft~ sub-patch: gizmo~ pitch shift. Ratio via receive~ sharm_r#1" } },
 
             { "box": { "id": "obj-fftin", "maxclass": "newobj", "numinlets": 1, "numoutlets": 3, "outlettype": [ "signal", "signal", "signal" ], "patching_rect": [ 40.0, 60.0, 80.0, 22.0 ], "text": "fftin~ 1" } },
 
-            { "box": { "id": "obj-ratio", "maxclass": "newobj", "numinlets": 1, "numoutlets": 1, "outlettype": [ "signal" ], "patching_rect": [ 200.0, 60.0, 95.0, 22.0 ], "text": "in~ 2" } },
+            { "box": { "id": "obj-ratio", "maxclass": "newobj", "numinlets": 1, "numoutlets": 1, "outlettype": [ "signal" ], "patching_rect": [ 200.0, 60.0, 120.0, 22.0 ], "text": "receive~ sharm_r#1" } },
 
             { "box": { "id": "obj-gizmo", "maxclass": "newobj", "numinlets": 2, "numoutlets": 2, "outlettype": [ "signal", "signal" ], "patching_rect": [ 40.0, 140.0, 80.0, 22.0 ], "text": "gizmo~" } },
 
             { "box": { "id": "obj-fftout", "maxclass": "newobj", "numinlets": 2, "numoutlets": 0, "patching_rect": [ 40.0, 220.0, 80.0, 22.0 ], "text": "fftout~ 1" } },
 
-            { "box": { "id": "obj-n1", "maxclass": "comment", "numinlets": 1, "numoutlets": 0, "patching_rect": [ 200.0, 100.0, 250.0, 20.0 ], "text": "ratio from parent: pow(2, semi/12)" } },
-            { "box": { "id": "obj-n2", "maxclass": "comment", "numinlets": 1, "numoutlets": 0, "patching_rect": [ 140.0, 140.0, 300.0, 20.0 ], "text": "gizmo~ shifts all FFT bins by ratio" } },
-            { "box": { "id": "obj-n3", "maxclass": "comment", "numinlets": 1, "numoutlets": 0, "patching_rect": [ 20.0, 270.0, 400.0, 20.0 ], "text": "Formant handled externally via tilt EQ (formant_eq)" } }
+            { "box": { "id": "obj-n1", "maxclass": "comment", "numinlets": 1, "numoutlets": 0, "patching_rect": [ 200.0, 100.0, 300.0, 20.0 ], "text": "#1 = voice number (1-4), set by pfft~ 4th arg" } },
+            { "box": { "id": "obj-n2", "maxclass": "comment", "numinlets": 1, "numoutlets": 0, "patching_rect": [ 140.0, 140.0, 300.0, 20.0 ], "text": "gizmo~ shifts all FFT bins by ratio" } }
         ],
         "lines": [
             { "patchline": { "source": [ "obj-fftin", 0 ], "destination": [ "obj-gizmo", 0 ] } },
